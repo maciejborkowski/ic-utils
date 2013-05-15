@@ -33,18 +33,19 @@ import java.util.List;
 
 public class FileProcessorImpl extends SimpleFileVisitor<Path> implements
 		FileProcessor {
-	private List<Path> filesPaths;
-	private PathMatcher pathMatcher;
+	private final List<Path> filesPaths;
+	private final PathMatcher pathMatcher;
 
-	public FileProcessorImpl(List<Path> filesPaths, PathMatcher matcher) {
+	public FileProcessorImpl(final List<Path> filesPaths, final PathMatcher matcher) {
+		super();
 		this.filesPaths = filesPaths;
 		this.pathMatcher = matcher;
 	}
 
 	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+	public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
 			throws IOException {
-		Path fileName = file.getFileName();
+		final Path fileName = file.getFileName();
 		if (fileName != null && pathMatcher.matches(fileName) && attrs.isRegularFile()) {
 			filesPaths.add(file);
 		}
