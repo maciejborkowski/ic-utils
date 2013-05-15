@@ -17,9 +17,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 package org.impressivecode.utils.sourcecrawler.files;
 
-import java.io.IOException;
+import java.nio.file.FileVisitor;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
+import java.util.List;
 
 /**
  *
@@ -27,11 +27,8 @@ import java.nio.file.PathMatcher;
  *
  */
 
-public interface FileHelper {
+public interface FileProcessor extends FileVisitor<Path> {
 
-	boolean isDirectory(Path path);
+	List<Path> getPaths();
 
-	Path walkFiles(Path path, FileProcessor fileProcessor) throws IOException;
-	
-	PathMatcher getPathMatcher(String regExp);
 }

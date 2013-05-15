@@ -14,24 +14,40 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package org.impressivecode.utils.sourcecrawler.files;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
- *
+ * 
  * @author Paweł Nosal
- *
+ * 
  */
 
-public interface FileHelper {
+public class FileScannerImpl implements FileScanner {
+	private FileHelper fileHelper;
+	public FileScannerImpl(FileHelper fileHelper) {
+		this.fileHelper = fileHelper;
+	}
 
-	boolean isDirectory(Path path);
+	@Override
+	public List<Path> scanDirectoryFiles(Path path, FileProcessor fileProcessor) throws IOException {
+		checkNotNull(path,"Path should not be null.");
+		checkNotNull(fileProcessor, "FileProcessor should not be null.");
+		checkIsDirectory(path);
+		fileHelper.walkFiles(path, fileProcessor);
+		return fileProcessor.getPaths();
+	}
 
-	Path walkFiles(Path path, FileProcessor fileProcessor) throws IOException;
-	
-	PathMatcher getPathMatcher(String regExp);
+	private void checkIsDirectory(Path path) {
+		if(!fileHelper.isDirectory(path)){
+			throw new IllegalArgumentException("File from path should be directory.");
+		}
+	}
+
 }

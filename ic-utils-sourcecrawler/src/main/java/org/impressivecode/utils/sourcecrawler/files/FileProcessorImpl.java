@@ -14,24 +14,46 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package org.impressivecode.utils.sourcecrawler.files;
 
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 
 /**
- *
+ * 
  * @author Paweł Nosal
- *
+ * 
  */
 
-public interface FileHelper {
+public class FileProcessorImpl extends SimpleFileVisitor<Path> implements
+		FileProcessor {
+	private List<Path> filesPaths;
+	private PathMatcher pathMatcher;
 
-	boolean isDirectory(Path path);
+	public FileProcessorImpl(List<Path> filesPaths, PathMatcher matcher) {
+		this.filesPaths = filesPaths;
+		this.pathMatcher = matcher;
+	}
 
-	Path walkFiles(Path path, FileProcessor fileProcessor) throws IOException;
-	
-	PathMatcher getPathMatcher(String regExp);
+	@Override
+	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+			throws IOException {
+		Path fileName = file.getFileName();
+		if (fileName != null && pathMatcher.matches(fileName) && attrs.isRegularFile()) {
+			filesPaths.add(file);
+		}
+		return FileVisitResult.CONTINUE;
+	}
+
+	@Override
+	public List<Path> getPaths() {
+		return filesPaths;
+	}
+
 }

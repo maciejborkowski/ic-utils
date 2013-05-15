@@ -19,7 +19,7 @@ package org.impressivecode.utils.sourcecrawler.files;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
+import java.util.List;
 
 /**
  *
@@ -27,11 +27,8 @@ import java.nio.file.PathMatcher;
  *
  */
 
-public interface FileHelper {
+public interface FileScanner {
 
-	boolean isDirectory(Path path);
+	List<Path> scanDirectoryFiles(Path pathToDirectory, FileProcessor fileProcessor) throws IOException;
 
-	Path walkFiles(Path path, FileProcessor fileProcessor) throws IOException;
-	
-	PathMatcher getPathMatcher(String regExp);
 }
