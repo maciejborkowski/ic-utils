@@ -33,18 +33,18 @@ import java.nio.file.PathMatcher;
 public class FileHelperImpl implements FileHelper {
 
 	@Override
-	public boolean isDirectory(Path path) {
+	public boolean isDirectory(final Path path) {
 		return Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS);
 	}
 
 	@Override
-	public Path walkFiles(Path path, FileProcessor fileProcessor)
+	public Path walkFiles(final Path path, final FileProcessor fileProcessor)
 			throws IOException {
 		return Files.walkFileTree(path, fileProcessor);
 	}
 
 	@Override
-	public PathMatcher getPathMatcher(String regExp) {
+	public PathMatcher getPathMatcher(final String regExp) {
 		return FileSystems.getDefault().getPathMatcher(regExp);
 	}
 

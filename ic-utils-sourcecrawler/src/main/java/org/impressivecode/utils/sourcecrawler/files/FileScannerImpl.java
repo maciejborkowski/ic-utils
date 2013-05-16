@@ -30,13 +30,13 @@ import static com.google.common.base.Preconditions.*;
  */
 
 public class FileScannerImpl implements FileScanner {
-	private FileHelper fileHelper;
-	public FileScannerImpl(FileHelper fileHelper) {
+	private final FileHelper fileHelper;
+	public FileScannerImpl(final FileHelper fileHelper) {
 		this.fileHelper = fileHelper;
 	}
 
 	@Override
-	public List<Path> scanDirectoryFiles(Path path, FileProcessor fileProcessor) throws IOException {
+	public List<Path> scanDirectoryFiles(final Path path, final FileProcessor fileProcessor) throws IOException {
 		checkNotNull(path,"Path should not be null.");
 		checkNotNull(fileProcessor, "FileProcessor should not be null.");
 		checkIsDirectory(path);
@@ -44,10 +44,10 @@ public class FileScannerImpl implements FileScanner {
 		return fileProcessor.getPaths();
 	}
 
-	private void checkIsDirectory(Path path) {
+	private void checkIsDirectory(final Path path) {
 		if(!fileHelper.isDirectory(path)){
 			throw new IllegalArgumentException("File from path should be directory.");
 		}
 	}
-
+	
 }
