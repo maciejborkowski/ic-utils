@@ -17,41 +17,55 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.impressivecode.utils.sourcecrawler.model;
 
-import java.util.List;
-
 /**
  * 
  * @author Paweł Nosal
  * 
  */
 
-public class JavaFile {
-	private String packageName;
-	private String filePath;
-	private List<JavaClazz> classes;
-
-	public String getPackageName() {
-		return packageName;
+public class JavaClazz {
+	private String className;
+	private ClazzType classType;
+	private boolean isException;
+	private boolean isTest;
+	private boolean isInner;
+	public String getClassName() {
+		return className;
 	}
 
-	public List<JavaClazz> getClasses() {
-		return classes;
+	public ClazzType getClassType() {
+		return classType;
 	}
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	public boolean isException() {
+		return isException;
 	}
 
-	public void setClasses(List<JavaClazz> classes) {
-		this.classes = classes;
+	public boolean isTest() {
+		return isTest;
 	}
 
-	public String getFilePath() {
-		return filePath;
+	public void setClassName(String className) {
+		this.className = className;
 	}
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setClassType(ClazzType classType) {
+		this.classType = classType;
 	}
 
+	public void setException(boolean isException) {
+		this.isException = isException;
+	}
+
+	public void setTest(boolean isTest) {
+		this.isTest = isTest;
+	}
+
+	public boolean isInner() {
+		return isInner;
+	}
+
+	public void setInner(boolean isInner) {
+		this.isInner = isInner;
+	}
 }

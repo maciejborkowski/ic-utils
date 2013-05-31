@@ -37,16 +37,29 @@ import com.thoughtworks.qdox.model.JavaSource;
 
 public class FilesParserImpl implements FilesParser {
 	private JavaDocBuilder javaDocBuilder;
+	private SourceParser sourceParser;
 
-	public FilesParserImpl(JavaDocBuilder singleFileParser) {
-		this.javaDocBuilder = singleFileParser;
+	public FilesParserImpl(JavaDocBuilder javaDockBuilder,
+			SourceParser sourceParser) {
+		this.javaDocBuilder = javaDockBuilder;
+		this.sourceParser = sourceParser;
 	}
 
 	@Override
-	public List<JavaFile> parseFiles(List<Path> javaPaths) throws FileNotFoundException, IOException {
+	public List<JavaFile> parseFiles(List<Path> javaPaths)
+			throws FileNotFoundException, IOException {
 		checkNotNull(javaPaths, "List of paths should not be null.");
 		List<JavaSource> javaSources = iterateByPaths(javaPaths);
-		List<JavaFile> javaFiles = newArrayList(); 
+		List<JavaFile> javaFiles = getJavaFilesFromSource(javaSources);
+		return javaFiles;
+	}
+
+	private List<JavaFile> getJavaFilesFromSource(List<JavaSource> javaSources) {
+		List<JavaFile> javaFiles = newArrayList();
+		for (JavaSource javaSource : javaSources) {
+			JavaFile javaFile = sourceParser.parseSource(javaSource);
+			javaFiles.add(javaFile);
+		}
 		return javaFiles;
 	}
 

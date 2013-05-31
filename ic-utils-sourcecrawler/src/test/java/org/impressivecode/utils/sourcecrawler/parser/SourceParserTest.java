@@ -1,0 +1,111 @@
+package org.impressivecode.utils.sourcecrawler.parser;
+
+import static org.testng.Assert.*;
+
+import java.net.URL;
+
+import org.impressivecode.utils.sourcecrawler.model.ClazzType;
+import org.impressivecode.utils.sourcecrawler.model.JavaClazz;
+import org.impressivecode.utils.sourcecrawler.model.JavaFile;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
+import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaSource;
+
+public class SourceParserTest {
+	@Mock
+	private JavaSource javaSource;
+	private static final String EXAMPLE_PACKAGE = "pl.example.package";
+	private SourceParser sourceParser;
+
+	@BeforeMethod
+	public void beforeMethod() {
+		MockitoAnnotations.initMocks(this);
+		sourceParser = new SourceParserImpl();
+		JavaClass[] javaClasses = {};
+		when(javaSource.getClasses()).thenReturn(javaClasses);
+	}
+
+	@Test
+	public void sourceParserShouldSetupFilePackageName() throws Exception {
+		// given
+		when(javaSource.getPackage()).thenReturn(EXAMPLE_PACKAGE);
+		// when
+		JavaFile javaFile = sourceParser.parseSource(javaSource);
+		// then
+		assertThat(javaFile.getPackageName()).isNotNull().isNotEmpty()
+				.isEqualTo(EXAMPLE_PACKAGE);
+	}
+
+	@Test(dataProvider = "java-class-data")
+	public void analyzeClassShouldSetupProperClassType(JavaClass javaClass,
+			ClazzType classType) throws Exception {
+		// when
+		JavaClazz javaClazz = sourceParser.analyzeClass(javaClass);
+		// then
+		assertThat(javaClazz.getClassType()).isNotNull().isSameAs(classType);
+	}
+
+	@Test
+	public void sourceParserShouldCheckClassIsThrowable() throws Exception {
+		// given
+		JavaClass superJavaClass = mock(JavaClass.class);
+		String string = new Throwable().getClass().getName();
+		when(superJavaClass.isA(string)).thenReturn(true);
+		// when
+		boolean isThrowable = sourceParser.checkIsThrowable(superJavaClass);
+		// then
+		assertTrue(isThrowable, "throwable java class ");
+	}
+
+	@Test
+	public void analyzeClassShouldSetupProperClassName() throws Exception {
+		// given
+		JavaClass javaClass = mock(JavaClass.class);
+		when(javaClass.getName()).thenReturn("sampleName");
+		// when
+		JavaClazz clazz = sourceParser.analyzeClass(javaClass);
+		// then
+		assertThat(clazz.getClassName()).isNotNull().isNotEmpty()
+				.isEqualTo("sampleName");
+	}
+	
+	@Test
+	public void analyzeClassShouldSetupIsInner() throws Exception {
+		//given
+		JavaClass javaClass = mock(JavaClass.class);
+		when(javaClass.isInner()).thenReturn(true);
+		//when
+		JavaClazz clazz = sourceParser.analyzeClass(javaClass);
+		//then
+		assertTrue(clazz.isInner());
+	}
+	@DataProvider(name = "java-class-data")
+	public Object[][] classTypeDataProvider() {
+		JavaClass abstractClass = mock(JavaClass.class);
+		when(abstractClass.isAbstract()).thenReturn(true);
+		JavaClass enumClass = mock(JavaClass.class);
+		when(enumClass.isEnum()).thenReturn(true);
+		JavaClass interfaceClass = mock(JavaClass.class);
+		when(interfaceClass.isInterface()).thenReturn(true);
+		JavaClass plainClass = mock(JavaClass.class);
+		Object[][] classes = new Object[][] {
+				{ abstractClass, ClazzType.ABSTRACT },
+				{ enumClass, ClazzType.ENUM },
+				{ interfaceClass, ClazzType.INTERFACE },
+				{ plainClass, ClazzType.CLASS } };
+		return classes;
+	}
+}

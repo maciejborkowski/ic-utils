@@ -14,51 +14,27 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-package org.impressivecode.utils.sourcecrawler.model;
+*/
+package org.impressivecode.utils.sourcecrawler.parser;
+
+import org.impressivecode.utils.sourcecrawler.model.JavaClazz;
+import org.impressivecode.utils.sourcecrawler.model.JavaFile;
+
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaSource;
 
 /**
- * 
+ *
  * @author Paweł Nosal
- * 
+ *
  */
 
-public class JavaClass {
-	private String className;
-	private ClazzType classType;
-	private boolean isException;
-	private boolean isTest;
+public interface SourceParser {
 
-	public String getClassName() {
-		return className;
-	}
+	JavaFile parseSource(JavaSource sourceToParse);
 
-	public ClazzType getClassType() {
-		return classType;
-	}
+	JavaClazz analyzeClass(JavaClass javaClass);
 
-	public boolean isException() {
-		return isException;
-	}
-
-	public boolean isTest() {
-		return isTest;
-	}
-
-	public void setClassName(String className) {
-		this.className = className;
-	}
-
-	public void setClassType(ClazzType classType) {
-		this.classType = classType;
-	}
-
-	public void setException(boolean isException) {
-		this.isException = isException;
-	}
-
-	public void setTest(boolean isTest) {
-		this.isTest = isTest;
-	}
+	boolean checkIsThrowable(JavaClass superJavaClass);
 
 }
