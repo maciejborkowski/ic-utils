@@ -17,11 +17,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.impressivecode.utils.sourcecrawler.parser;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import static com.google.common.collect.Lists.*;
 import static com.google.common.base.Preconditions.*;
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
+
+import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.model.JavaSource;
 
 /**
  * 
@@ -30,25 +36,27 @@ import org.impressivecode.utils.sourcecrawler.model.JavaFile;
  */
 
 public class FilesParserImpl implements FilesParser {
-	private SingleFileParser singleFileParser;
+	private JavaDocBuilder javaDocBuilder;
 
-	public FilesParserImpl(SingleFileParser singleFileParser) {
-		this.singleFileParser = singleFileParser;
+	public FilesParserImpl(JavaDocBuilder singleFileParser) {
+		this.javaDocBuilder = singleFileParser;
 	}
 
 	@Override
-	public List<JavaFile> parseFiles(List<Path> javaPaths) {
+	public List<JavaFile> parseFiles(List<Path> javaPaths) throws FileNotFoundException, IOException {
 		checkNotNull(javaPaths, "List of paths should not be null.");
-		List<JavaFile> javaFiles = iterateByPaths(javaPaths);
+		List<JavaSource> javaSources = iterateByPaths(javaPaths);
+		List<JavaFile> javaFiles = newArrayList(); 
 		return javaFiles;
 	}
 
-	private List<JavaFile> iterateByPaths(List<Path> javaPaths) {
-		List<JavaFile> javaFiles = newArrayList();
+	private List<JavaSource> iterateByPaths(List<Path> javaPaths)
+			throws FileNotFoundException, IOException {
 		for (Path path : javaPaths) {
-			JavaFile file = singleFileParser.parseFile(path);
-			javaFiles.add(file);
+			File fileToParse = path.toFile();
+			javaDocBuilder.addSource(fileToParse);
 		}
+		List<JavaSource> javaFiles = newArrayList(javaDocBuilder.getSources());
 		return javaFiles;
 	}
 }

@@ -4,12 +4,14 @@ import static org.testng.Assert.*;
 
 import org.testng.annotations.Test;
 
+import com.thoughtworks.qdox.JavaDocBuilder;
+
 public class SingleFileParserTest {
 
 	@Test
-	public void testName() throws Exception {
+	public void singleFileParserShouldAddAllFilesToDocumentBuilder() throws Exception {
 		// given
-		// when
+		
 		// then
 	}
 }

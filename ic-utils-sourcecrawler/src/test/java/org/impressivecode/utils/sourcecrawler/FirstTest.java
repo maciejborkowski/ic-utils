@@ -20,7 +20,9 @@ import org.testng.annotations.Test;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaClassParent;
 import com.thoughtworks.qdox.model.JavaSource;
+import com.thoughtworks.qdox.model.Type;
 
 public class FirstTest {
 	@Test
@@ -42,12 +44,16 @@ public class FirstTest {
 		JavaSource[] javaSources = builder.getSources();
 		for (JavaSource javaSource : javaSources) {
 			
-			System.out.println(javaSource.getPackage());
+			System.out.println(javaSource.getURL().getPath());
 			JavaClass[] classes = javaSource.getClasses();
 			for (JavaClass javaClass : classes) {
 				System.out.println("    "+javaClass.getName());
 				System.out.println("    "+javaClass.isInterface());
 				System.out.println("    "+javaClass.isEnum());
+				System.out.println("    "+javaClass.isInner());
+				String string = new Throwable().getClass().getName();
+				if(javaClass.getSuperJavaClass()!=null)
+					System.out.println(javaClass.getSuperJavaClass().isA(string));
 			}
 			
 		}
