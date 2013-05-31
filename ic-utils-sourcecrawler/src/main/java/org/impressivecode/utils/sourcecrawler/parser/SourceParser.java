@@ -14,21 +14,27 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package org.impressivecode.utils.sourcecrawler.parser;
 
-import java.nio.file.Path;
-
+import org.impressivecode.utils.sourcecrawler.model.JavaClazz;
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
 
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaSource;
+
 /**
- * 
+ *
  * @author Paweł Nosal
- * 
+ *
  */
 
-public interface SingleFileParser {
+public interface SourceParser {
 
-	JavaFile parseFile(Path path);
+	JavaFile parseSource(JavaSource sourceToParse);
+
+	JavaClazz analyzeClass(JavaClass javaClass);
+
+	boolean checkIsThrowable(JavaClass superJavaClass);
 
 }

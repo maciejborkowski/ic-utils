@@ -27,13 +27,14 @@ import java.util.List;
 
 public class JavaFile {
 	private String packageName;
-	private List<JavaClass> classes;
+	private String filePath;
+	private List<JavaClazz> classes;
 
 	public String getPackageName() {
 		return packageName;
 	}
 
-	public List<JavaClass> getClasses() {
+	public List<JavaClazz> getClasses() {
 		return classes;
 	}
 
@@ -41,8 +42,16 @@ public class JavaFile {
 		this.packageName = packageName;
 	}
 
-	public void setClasses(List<JavaClass> classes) {
+	public void setClasses(List<JavaClazz> classes) {
 		this.classes = classes;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 
 }

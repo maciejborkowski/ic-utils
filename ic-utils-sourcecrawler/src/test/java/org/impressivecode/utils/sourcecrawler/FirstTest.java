@@ -16,11 +16,19 @@ import org.impressivecode.utils.sourcecrawler.files.FileProcessor;
 import org.impressivecode.utils.sourcecrawler.files.FileProcessorImpl;
 import org.impressivecode.utils.sourcecrawler.files.FileScanner;
 import org.impressivecode.utils.sourcecrawler.files.FileScannerImpl;
+import org.impressivecode.utils.sourcecrawler.model.JavaClazz;
+import org.impressivecode.utils.sourcecrawler.model.JavaFile;
+import org.impressivecode.utils.sourcecrawler.parser.FilesParser;
+import org.impressivecode.utils.sourcecrawler.parser.FilesParserImpl;
+import org.impressivecode.utils.sourcecrawler.parser.SourceParser;
+import org.impressivecode.utils.sourcecrawler.parser.SourceParserImpl;
 import org.testng.annotations.Test;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaClassParent;
 import com.thoughtworks.qdox.model.JavaSource;
+import com.thoughtworks.qdox.model.Type;
 
 public class FirstTest {
 	@Test
@@ -32,24 +40,24 @@ public class FirstTest {
 		FileScanner fileScanner = new FileScannerImpl(fileHelper);
 		List<Path> list = new ArrayList<Path>();
 		FileProcessor fileProcessor = new FileProcessorImpl(list, matcher);
-		fileScanner.scanDirectoryFiles(path, fileProcessor);
-		assertThat(list).isNotEmpty();
+		List<Path> scanDirectoryFiles = fileScanner.scanDirectoryFiles(path, fileProcessor);
 		JavaDocBuilder builder = new JavaDocBuilder();
-		for (Path path2 : list) {
-			builder.addSource(path2.toFile());
+		SourceParser sourceParser = new SourceParserImpl();
+		FilesParser fileParser = new FilesParserImpl(builder, sourceParser);
+		List<JavaFile> parseFiles = fileParser.parseFiles(scanDirectoryFiles);
+		for (JavaFile javaFile : parseFiles) {
+			System.out.println(javaFile.getPackageName());
+			System.out.println(javaFile.getFilePath());
+			List<JavaClazz> classes = javaFile.getClasses();
+			for (JavaClazz javaClazz : classes) {
+				System.out.println("  "+javaClazz.getClassName());
+				System.out.println("  "+javaClazz.isException());
+				System.out.println("  "+javaClazz.getClassType());
+				System.out.println("  "+javaClazz.isInner());
+				System.out.println();
+			}
+			System.out.println();
 		}
 		
-		JavaSource[] javaSources = builder.getSources();
-		for (JavaSource javaSource : javaSources) {
-			
-			System.out.println(javaSource.getPackage());
-			JavaClass[] classes = javaSource.getClasses();
-			for (JavaClass javaClass : classes) {
-				System.out.println("    "+javaClass.getName());
-				System.out.println("    "+javaClass.isInterface());
-				System.out.println("    "+javaClass.isEnum());
-			}
-			
-		}
 	}
 }

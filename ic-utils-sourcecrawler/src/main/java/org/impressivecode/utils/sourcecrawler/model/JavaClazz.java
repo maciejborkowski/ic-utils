@@ -23,12 +23,12 @@ package org.impressivecode.utils.sourcecrawler.model;
  * 
  */
 
-public class JavaClass {
+public class JavaClazz {
 	private String className;
 	private ClazzType classType;
 	private boolean isException;
 	private boolean isTest;
-
+	private boolean isInner;
 	public String getClassName() {
 		return className;
 	}
@@ -61,4 +61,11 @@ public class JavaClass {
 		this.isTest = isTest;
 	}
 
+	public boolean isInner() {
+		return isInner;
+	}
+
+	public void setInner(boolean isInner) {
+		this.isInner = isInner;
+	}
 }
