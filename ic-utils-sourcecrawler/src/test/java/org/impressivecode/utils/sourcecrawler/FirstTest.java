@@ -1,8 +1,6 @@
 package org.impressivecode.utils.sourcecrawler;
 
-import static org.fest.assertions.Assertions.assertThat;
-
-import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -10,6 +8,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.impressivecode.utils.sourcecrawler.files.FileHelper;
 import org.impressivecode.utils.sourcecrawler.files.FileHelperImpl;
 import org.impressivecode.utils.sourcecrawler.files.FileProcessor;
@@ -25,10 +28,6 @@ import org.impressivecode.utils.sourcecrawler.parser.SourceParserImpl;
 import org.testng.annotations.Test;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaClassParent;
-import com.thoughtworks.qdox.model.JavaSource;
-import com.thoughtworks.qdox.model.Type;
 
 public class FirstTest {
 	@Test
@@ -45,19 +44,28 @@ public class FirstTest {
 		SourceParser sourceParser = new SourceParserImpl();
 		FilesParser fileParser = new FilesParserImpl(builder, sourceParser);
 		List<JavaFile> parseFiles = fileParser.parseFiles(scanDirectoryFiles);
+		Document document = DocumentHelper.createDocument();
+        Element root = document.addElement( "root" );
 		for (JavaFile javaFile : parseFiles) {
-			System.out.println(javaFile.getPackageName());
-			System.out.println(javaFile.getFilePath());
+			Element file = root.addElement("file");
+			file.addElement("path").setText(javaFile.getFilePath());
+			file.addElement("package").addText(javaFile.getPackageName());
+			Element classesElement = file.addElement("classes");
 			List<JavaClazz> classes = javaFile.getClasses();
 			for (JavaClazz javaClazz : classes) {
-				System.out.println("  "+javaClazz.getClassName());
-				System.out.println("  "+javaClazz.isException());
-				System.out.println("  "+javaClazz.getClassType());
-				System.out.println("  "+javaClazz.isInner());
-				System.out.println();
+				Element classElement = classesElement.addElement("class");
+				classElement.addElement("type").setText(javaClazz.getClassType().getName());
+				classElement.addElement("name").setText(javaClazz.getClassName());
+				classElement.addElement("exception").setText(Boolean.toString(javaClazz.isException()));
+				classElement.addElement("inner").setText(Boolean.toString(javaClazz.isInner()));
 			}
-			System.out.println();
 		}
-		
+		OutputFormat format = OutputFormat.createPrettyPrint();
+		 XMLWriter writer = new XMLWriter(
+		            new FileWriter( "/home/gorzata16/output.xml" ),format
+		        );
+		 
+		        writer.write( document );
+		        writer.close();
 	}
 }
