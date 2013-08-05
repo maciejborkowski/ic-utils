@@ -63,6 +63,8 @@ public class XMLDocumentWriterImpl implements DocumentWriter {
 					Boolean.toString(javaClazz.isException()));
 			classElement.addElement("inner").setText(
 					Boolean.toString(javaClazz.isInner()));
+            classElement.addElement("test").setText(
+                    Boolean.toString(javaClazz.isTest()));
 		}
 	}
 

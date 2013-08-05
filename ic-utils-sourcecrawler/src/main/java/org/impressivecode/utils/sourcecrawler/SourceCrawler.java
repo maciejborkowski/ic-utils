@@ -49,55 +49,57 @@ import java.util.List;
 
 /**
  * Goal which touches a timestamp file.
- * 
+ *
  * @goal scann
- * 
  * @phase process-sources
  */
 @Mojo(name = "scann")
 public class SourceCrawler extends AbstractMojo {
-	private static final String ROOT = ".";
+    private static final String ROOT = ".";
+    private String path;
 
-	public void execute() throws MojoExecutionException {
-		getLog().info("Start scann files.");
-		try {
-			List<JavaFile> parsedFiles = prepareFileList();
-			DocumentWriter writer = new XMLDocumentWriterImpl(
-					"class_output.xml");
-			writer.write(parsedFiles);
-		} catch (IOException e) {
-			getLog().error(e.getMessage());
-			e.printStackTrace();
-		}
-		getLog().info("Finish.");
-	}
+    public void execute() throws MojoExecutionException {
+        getLog().info("Start scann files.");
+        try {
+            List<JavaFile> parsedFiles = prepareFileList();
+            path = "sourcecrawler.xml";
+            DocumentWriter writer = new XMLDocumentWriterImpl(
+                    path);
+            writer.write(parsedFiles);
+        } catch (IOException e) {
+            getLog().error(e.getMessage());
+            e.printStackTrace();
+            throw new MojoExecutionException(e.getMessage());
+        }
+        getLog().info("Finish.");
+    }
 
-	private List<JavaFile> prepareFileList() throws IOException,
-			FileNotFoundException {
-		List<Path> scanDirectoryFiles = generateFileList();
-		List<JavaFile> parseFiles = generateFilesListToParse(scanDirectoryFiles);
-		return parseFiles;
-	}
+    private List<JavaFile> prepareFileList() throws IOException,
+            FileNotFoundException {
+        List<Path> scanDirectoryFiles = generateFileList();
+        List<JavaFile> parseFiles = generateFilesListToParse(scanDirectoryFiles);
+        return parseFiles;
+    }
 
-	private List<JavaFile> generateFilesListToParse(
-			List<Path> scanDirectoryFiles) throws FileNotFoundException,
-			IOException {
-		JavaDocBuilder builder = new JavaDocBuilder();
-		SourceParser sourceParser = new SourceParserImpl();
-		FilesParser fileParser = new FilesParserImpl(builder, sourceParser);
-		return fileParser.parseFiles(scanDirectoryFiles);
-	}
+    private List<JavaFile> generateFilesListToParse(
+            List<Path> scanDirectoryFiles) throws FileNotFoundException,
+            IOException {
+        JavaDocBuilder builder = new JavaDocBuilder();
+        SourceParser sourceParser = new SourceParserImpl();
+        FilesParser fileParser = new FilesParserImpl(builder, sourceParser);
+        return fileParser.parseFiles(scanDirectoryFiles);
+    }
 
-	private List<Path> generateFileList() throws IOException {
-		Path path = Paths.get(ROOT);
-		FileHelper fileHelper = new FileHelperImpl();
-		PathMatcher matcher = fileHelper.getPathMatcher("glob:*.java");
-		FileScanner fileScanner = new FileScannerImpl(fileHelper);
-		FileProcessor fileProcessor = new FileProcessorImpl(
-				new ArrayList<Path>(), matcher);
+    private List<Path> generateFileList() throws IOException {
+        Path path = Paths.get(ROOT);
+        FileHelper fileHelper = new FileHelperImpl();
+        PathMatcher matcher = fileHelper.getPathMatcher("glob:*.java");
+        FileScanner fileScanner = new FileScannerImpl(fileHelper);
+        FileProcessor fileProcessor = new FileProcessorImpl(
+                new ArrayList<Path>(), matcher);
 
-		List<Path> scanDirectoryFiles = fileScanner.scanDirectoryFiles(path,
-				fileProcessor);
-		return scanDirectoryFiles;
-	}
+        List<Path> scanDirectoryFiles = fileScanner.scanDirectoryFiles(path,
+                fileProcessor);
+        return scanDirectoryFiles;
+    }
 }

@@ -4,6 +4,7 @@ import static org.testng.Assert.*;
 
 import java.net.URL;
 
+import org.impressivecode.utils.sourcecrawler.files.FileHelper;
 import org.impressivecode.utils.sourcecrawler.model.ClazzType;
 import org.impressivecode.utils.sourcecrawler.model.JavaClazz;
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
@@ -27,13 +28,15 @@ import com.thoughtworks.qdox.model.JavaSource;
 public class SourceParserTest {
 	@Mock
 	private JavaSource javaSource;
+    @Mock
+    private FileHelper fileHelper;
 	private static final String EXAMPLE_PACKAGE = "pl.example.package";
 	private SourceParser sourceParser;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		MockitoAnnotations.initMocks(this);
-		sourceParser = new SourceParserImpl();
+		sourceParser = new SourceParserImpl(fileHelper);
 		JavaClass[] javaClasses = {};
 		when(javaSource.getClasses()).thenReturn(javaClasses);
 	}
@@ -52,6 +55,8 @@ public class SourceParserTest {
 	@Test(dataProvider = "java-class-data")
 	public void analyzeClassShouldSetupProperClassType(JavaClass javaClass,
 			ClazzType classType) throws Exception {
+        JavaSource javaSource1 = mock(JavaSource.class);
+        when(javaClass.getSource()).thenReturn(javaSource1);
 		// when
 		JavaClazz javaClazz = sourceParser.analyzeClass(javaClass);
 		// then
@@ -75,6 +80,8 @@ public class SourceParserTest {
 		// given
 		JavaClass javaClass = mock(JavaClass.class);
 		when(javaClass.getName()).thenReturn("sampleName");
+        JavaSource javaSource1 = mock(JavaSource.class);
+        when(javaClass.getSource()).thenReturn(javaSource1);
 		// when
 		JavaClazz clazz = sourceParser.analyzeClass(javaClass);
 		// then
@@ -86,6 +93,8 @@ public class SourceParserTest {
 	public void analyzeClassShouldSetupIsInner() throws Exception {
 		//given
 		JavaClass javaClass = mock(JavaClass.class);
+        JavaSource javaSource1 = mock(JavaSource.class);
+        when(javaClass.getSource()).thenReturn(javaSource1);
 		when(javaClass.isInner()).thenReturn(true);
 		//when
 		JavaClazz clazz = sourceParser.analyzeClass(javaClass);
