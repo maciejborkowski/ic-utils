@@ -17,6 +17,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.impressivecode.utils.sourcecrawler.files;
 
+import com.thoughtworks.qdox.model.JavaSource;
+
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -47,5 +49,10 @@ public class FileHelperImpl implements FileHelper {
 	public PathMatcher getPathMatcher(final String regExp) {
 		return FileSystems.getDefault().getPathMatcher(regExp);
 	}
+
+    @Override
+    public boolean isTest(JavaSource javaSource) {
+        return javaSource.getURL().getPath().indexOf("/test/")>-1;
+    }
 
 }

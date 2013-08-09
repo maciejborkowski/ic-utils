@@ -4,7 +4,7 @@
 	<groupId>org.impressivecode.utils.sourcecrawler</groupId>
 	<artifactId>ic-utils-sourcecrawler</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>ic-utils-sourcecrawler Maven Mojo</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
@@ -58,9 +58,19 @@
 			<artifactId>qdox</artifactId>
 			<version>1.6.1</version>
 		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.impressivecode.utils.sourcecrawler</groupId>
+				<artifactId>ic-utils-sourcecrawler</artifactId>
+				<version>1.0.0</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -70,32 +80,10 @@
 					<target>1.7</target>
 					<showDeprecation>true</showDeprecation>
 					<showWarnings>true</showWarnings>
-					<executable>${env.JAVA_HOME}/bin/javac</executable>
 					<fork>true</fork>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.5.2</version>
-				<configuration>
-					<formats>
-						<format>xml</format>
-					</formats>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>cobertura</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</reporting>
 </project>
