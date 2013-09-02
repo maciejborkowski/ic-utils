@@ -7,11 +7,11 @@ ImpressiveCode utils
 Plugin for analyze source files in Maven project. Purpose of this plugin is generate xml file describing structure of classes in project.
 
 <h3>How to use</h3>
-In project directory invoke follow command: <br/>
+In plugin directory invoke following command: <br/>
 ```
 mvn clean install
 ```
-When plugin is installed in local repository we can use it in own project by addit it in pom file:
+When plugin is installed in local repository, we can use it in own project by. Just only add it to pom file.
 
 ```xml
 <build>
@@ -25,11 +25,11 @@ When plugin is installed in local repository we can use it in own project by add
 </build>
 ```
 
-Now we can use scann goal in project by follow command:
+Now we can use scan goal in project by follow command:
 ```
 mvn org.impressivecode.utils.sourcecrawler:ic-utils-sourcecrawler:1.0.0:scann
 ```
-Plugin generate output in <b>sourcecrawler.xml</b> in root directory of project.
+Plugin generate output file <c>source crawler.xml</b> in root directory of project.
 
 <h3>Output file structure</h3>
 Sample output xml file:
