@@ -70,3 +70,10 @@ Sample output xml file:
   </file>
 </root>
 ```
+<h2>How to use plugin as standalone scanner</h2>
+
+In directory which contains plugins jar invoke followed command:
+```
+java -jar ic-utils-sourcecrawler-1.0.0-snapshot.jar -i ./dir/to/scan -o ./dir/output.xml
+```
+Mandatory flag is -i (--input). This flag shows where start scanning project's files. Optional flag is -o (--output) which shows where to save output in xml.
