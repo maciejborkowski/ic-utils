@@ -5,8 +5,10 @@ ImpressiveCode ic-utils Project
 Copyright (C) 2013 ImpressiveCode (http://impressivecode.org)
 
 Depress is licensed under the GPL license. (http://www.gnu.org/licenses/gpl.html)
+<h3>Preface</h3>
+Plugin need Java 7 or higher to work. Source crawler can be used as a maven plugin or as a standalone application.
 
-<h2>How to use</h2>
+<h3>How to use as maven plugin</h3>
 
 In plugin directory invoke following command: 
 
@@ -36,7 +38,15 @@ mvn org.impressivecode.utils.sourcecrawler:ic-utils-sourcecrawler:1.0.0:scann
 
 Plugin generate output file source crawler.xml in root directory of project.
 
-<h2>Output file structure</h2>
+<h3>How to use plugin as standalone scanner</h3>
+
+In directory which contains plugins jar invoke followed command:
+```
+java -jar ic-utils-sourcecrawler-1.0.0-snapshot.jar -i ./dir/to/scan -o ./dir/output.xml
+```
+Mandatory flag is -i (--input). This flag shows where start scanning project's files. Optional flag is -o (--output) which shows where to save output in xml.
+
+<h3>Sample output file</h3>
 
 Sample output xml file:
 
@@ -70,10 +80,3 @@ Sample output xml file:
   </file>
 </root>
 ```
-<h2>How to use plugin as standalone scanner</h2>
-
-In directory which contains plugins jar invoke followed command:
-```
-java -jar ic-utils-sourcecrawler-1.0.0-snapshot.jar -i ./dir/to/scan -o ./dir/output.xml
-```
-Mandatory flag is -i (--input). This flag shows where start scanning project's files. Optional flag is -o (--output) which shows where to save output in xml.
