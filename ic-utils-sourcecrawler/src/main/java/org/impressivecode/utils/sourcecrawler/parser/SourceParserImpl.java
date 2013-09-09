@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,8 +85,9 @@ public class SourceParserImpl implements SourceParser {
 
     private void setupPath(JavaSource sourceToParse, JavaFile javaFile) throws URISyntaxException, IOException {
         if (sourceToParse.getURL() != null) {
-            URI uri = sourceToParse.getURL().toURI();
-            File file = new File(uri);
+            URL url = sourceToParse.getURL();
+//            URI uri = url.toURI();
+            File file = new File(url.getPath());
             javaFile.setFilePath(file.getCanonicalPath());
         }
     }

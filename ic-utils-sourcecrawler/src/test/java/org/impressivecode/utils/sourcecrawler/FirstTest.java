@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 import com.thoughtworks.qdox.JavaDocBuilder;
 
 public class FirstTest {
-	@Test
+	@Test(enabled = false)
 	public void f() throws IOException {
 		String ROOT = ".";
 		Path path = Paths.get(ROOT);

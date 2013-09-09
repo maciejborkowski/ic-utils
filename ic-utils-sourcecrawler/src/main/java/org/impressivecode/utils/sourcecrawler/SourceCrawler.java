@@ -17,7 +17,6 @@ package org.impressivecode.utils.sourcecrawler;
  You should have received a copy of the GNU General Public License
  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -41,6 +40,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
@@ -55,16 +55,20 @@ import java.util.List;
  */
 @Mojo(name = "scann")
 public class SourceCrawler extends AbstractMojo {
-    private static final String ROOT = ".";
-    private String path;
 
     public void execute() throws MojoExecutionException {
+        String root = ".";
+        String path = "sourcecrawler.xml";
+        execute(root, path);
+    }
+
+    public void execute(String input, String output) throws MojoExecutionException {
         getLog().info("Start scann files.");
         try {
-            List<JavaFile> parsedFiles = prepareFileList();
-            path = "sourcecrawler.xml";
+            List<JavaFile> parsedFiles = prepareFileList(input);
+
             DocumentWriter writer = new XMLDocumentWriterImpl(
-                    path);
+                    output);
             writer.write(parsedFiles);
         } catch (IOException e) {
             getLog().error(e.getMessage());
@@ -74,9 +78,9 @@ public class SourceCrawler extends AbstractMojo {
         getLog().info("Finish.");
     }
 
-    private List<JavaFile> prepareFileList() throws IOException,
+    private List<JavaFile> prepareFileList(String filesToParse) throws IOException,
             FileNotFoundException {
-        List<Path> scanDirectoryFiles = generateFileList();
+        List<Path> scanDirectoryFiles = generateFileList(filesToParse);
         List<JavaFile> parseFiles = generateFilesListToParse(scanDirectoryFiles);
         return parseFiles;
     }
@@ -90,8 +94,8 @@ public class SourceCrawler extends AbstractMojo {
         return fileParser.parseFiles(scanDirectoryFiles);
     }
 
-    private List<Path> generateFileList() throws IOException {
-        Path path = Paths.get(ROOT);
+    private List<Path> generateFileList(String filesToParse) throws IOException {
+        Path path = Paths.get(filesToParse);
         FileHelper fileHelper = new FileHelperImpl();
         PathMatcher matcher = fileHelper.getPathMatcher("glob:*.java");
         FileScanner fileScanner = new FileScannerImpl(fileHelper);
