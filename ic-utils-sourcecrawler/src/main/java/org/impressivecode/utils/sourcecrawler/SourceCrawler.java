@@ -17,7 +17,6 @@ package org.impressivecode.utils.sourcecrawler;
  You should have received a copy of the GNU General Public License
  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -41,6 +40,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
@@ -49,55 +49,61 @@ import java.util.List;
 
 /**
  * Goal which touches a timestamp file.
- * 
+ *
  * @goal scann
- * 
  * @phase process-sources
  */
 @Mojo(name = "scann")
 public class SourceCrawler extends AbstractMojo {
-	private static final String ROOT = ".";
 
-	public void execute() throws MojoExecutionException {
-		getLog().info("Start scann files.");
-		try {
-			List<JavaFile> parsedFiles = prepareFileList();
-			DocumentWriter writer = new XMLDocumentWriterImpl(
-					"class_output.xml");
-			writer.write(parsedFiles);
-		} catch (IOException e) {
-			getLog().error(e.getMessage());
-			e.printStackTrace();
-		}
-		getLog().info("Finish.");
-	}
+    public void execute() throws MojoExecutionException {
+        String root = ".";
+        String path = "sourcecrawler.xml";
+        execute(root, path);
+    }
 
-	private List<JavaFile> prepareFileList() throws IOException,
-			FileNotFoundException {
-		List<Path> scanDirectoryFiles = generateFileList();
-		List<JavaFile> parseFiles = generateFilesListToParse(scanDirectoryFiles);
-		return parseFiles;
-	}
+    public void execute(String input, String output) throws MojoExecutionException {
+        getLog().info("Start scann files.");
+        try {
+            List<JavaFile> parsedFiles = prepareFileList(input);
 
-	private List<JavaFile> generateFilesListToParse(
-			List<Path> scanDirectoryFiles) throws FileNotFoundException,
-			IOException {
-		JavaDocBuilder builder = new JavaDocBuilder();
-		SourceParser sourceParser = new SourceParserImpl();
-		FilesParser fileParser = new FilesParserImpl(builder, sourceParser);
-		return fileParser.parseFiles(scanDirectoryFiles);
-	}
+            DocumentWriter writer = new XMLDocumentWriterImpl(
+                    output);
+            writer.write(parsedFiles);
+        } catch (IOException e) {
+            getLog().error(e.getMessage());
+            e.printStackTrace();
+            throw new MojoExecutionException(e.getMessage());
+        }
+        getLog().info("Finish.");
+    }
 
-	private List<Path> generateFileList() throws IOException {
-		Path path = Paths.get(ROOT);
-		FileHelper fileHelper = new FileHelperImpl();
-		PathMatcher matcher = fileHelper.getPathMatcher("glob:*.java");
-		FileScanner fileScanner = new FileScannerImpl(fileHelper);
-		FileProcessor fileProcessor = new FileProcessorImpl(
-				new ArrayList<Path>(), matcher);
+    private List<JavaFile> prepareFileList(String filesToParse) throws IOException,
+            FileNotFoundException {
+        List<Path> scanDirectoryFiles = generateFileList(filesToParse);
+        List<JavaFile> parseFiles = generateFilesListToParse(scanDirectoryFiles);
+        return parseFiles;
+    }
 
-		List<Path> scanDirectoryFiles = fileScanner.scanDirectoryFiles(path,
-				fileProcessor);
-		return scanDirectoryFiles;
-	}
+    private List<JavaFile> generateFilesListToParse(
+            List<Path> scanDirectoryFiles) throws FileNotFoundException,
+            IOException {
+        JavaDocBuilder builder = new JavaDocBuilder();
+        SourceParser sourceParser = new SourceParserImpl();
+        FilesParser fileParser = new FilesParserImpl(builder, sourceParser);
+        return fileParser.parseFiles(scanDirectoryFiles);
+    }
+
+    private List<Path> generateFileList(String filesToParse) throws IOException {
+        Path path = Paths.get(filesToParse);
+        FileHelper fileHelper = new FileHelperImpl();
+        PathMatcher matcher = fileHelper.getPathMatcher("glob:*.java");
+        FileScanner fileScanner = new FileScannerImpl(fileHelper);
+        FileProcessor fileProcessor = new FileProcessorImpl(
+                new ArrayList<Path>(), matcher);
+
+        List<Path> scanDirectoryFiles = fileScanner.scanDirectoryFiles(path,
+                fileProcessor);
+        return scanDirectoryFiles;
+    }
 }

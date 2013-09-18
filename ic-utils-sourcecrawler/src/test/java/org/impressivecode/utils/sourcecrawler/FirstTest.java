@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 import com.thoughtworks.qdox.JavaDocBuilder;
 
 public class FirstTest {
-	@Test
+	@Test(enabled = false)
 	public void f() throws IOException {
 		String ROOT = ".";
 		Path path = Paths.get(ROOT);
@@ -58,14 +58,16 @@ public class FirstTest {
 				classElement.addElement("name").setText(javaClazz.getClassName());
 				classElement.addElement("exception").setText(Boolean.toString(javaClazz.isException()));
 				classElement.addElement("inner").setText(Boolean.toString(javaClazz.isInner()));
+                classElement.addElement("test").setText(Boolean.toString(javaClazz.isTest()));
 			}
 		}
 		OutputFormat format = OutputFormat.createPrettyPrint();
 		 XMLWriter writer = new XMLWriter(
-		            new FileWriter( "/home/gorzata16/output.xml" ),format
+		            new FileWriter( "output.xml" ),format
 		        );
 		 
 		        writer.write( document );
 		        writer.close();
-	}
+
+    }
 }
