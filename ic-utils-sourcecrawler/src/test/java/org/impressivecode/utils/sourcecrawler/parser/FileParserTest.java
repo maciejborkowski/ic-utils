@@ -26,101 +26,103 @@ import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 
 public class FileParserTest {
-	@Mock
-	private JavaDocBuilder javaDocBuilder;
 
-	@Mock
-	private SourceParser sourceParser;
-	@Mock
-	private Path path;
-	private FilesParser filesParser;
+    @Mock
+    private JavaDocBuilder javaDocBuilder;
 
-	@BeforeMethod
-	public void beforeMethod() {
-		MockitoAnnotations.initMocks(this);
-		filesParser = new FilesParserImpl(javaDocBuilder, sourceParser);
-		JavaSource[] javaSources = {};
-		when(javaDocBuilder.getSources()).thenReturn(javaSources);
-	}
+    @Mock
+    private SourceParser sourceParser;
+    private Path path;
+    private FilesParser filesParser;
 
-	@Test
-	public void parseFileReturnListOfJavaFiles() throws FileNotFoundException,
-			IOException {
-		// given
-		List<Path> javaPaths = newArrayList();
-		// when
-		List<JavaFile> javaFiles = filesParser.parseFiles(javaPaths);
-		// then
-		assertThat(javaFiles).isNotNull().isEmpty();
-	}
+    @BeforeMethod
+    public void beforeMethod() {
+        MockitoAnnotations.initMocks(this);
 
-	@Test
-	public void parseFileShouldIterateOverAllFiles() throws Exception {
-		// given
-		List<Path> javaPaths = prepareFilesPaths();
-		// when
-		filesParser.parseFiles(javaPaths);
-		// then
-		verify(javaDocBuilder, atLeast(javaPaths.size())).addSource(
-				any(File.class));
-	}
+        filesParser = new FilesParserImpl(javaDocBuilder, sourceParser);
+        JavaSource[] javaSources = {};
+        when(javaDocBuilder.getSources()).thenReturn(javaSources);
+    }
 
-	@Test
-	public void parseFileShouldReturnExceptionWhenListIsNull() throws Exception {
-		// given
-		List<Path> javaPaths = null;
-		// when
-		catchException(filesParser).parseFiles(javaPaths);
-		// then
-		assertThat(caughtException()).isInstanceOf(NullPointerException.class)
-				.hasMessage("List of paths should not be null.");
-	}
+    @Test
+    public void parseFileReturnListOfJavaFiles() throws FileNotFoundException,
+            IOException {
+        // given
+        List<Path> javaPaths = newArrayList();
+        // when
+        List<JavaFile> javaFiles = filesParser.parseFiles(javaPaths);
+        // then
+        assertThat(javaFiles).isNotNull().isEmpty();
+    }
 
-	@Test
-	public void parseFileShouldConvertPathToFile() throws Exception {
-		List<Path> javaPaths = prepareFilesPaths();
-		// when
-		filesParser.parseFiles(javaPaths);
-		// then
-		verify(path, atLeast(javaPaths.size())).toFile();
-	}
+    @Test
+    public void parseFileShouldIterateOverAllFiles() throws Exception {
+        // given
+        List<Path> javaPaths = prepareFilesPaths();
+        // when
+        filesParser.parseFiles(javaPaths);
+        // then
+        verify(javaDocBuilder, atLeast(javaPaths.size())).addSource(
+                any(File.class));
+    }
 
-	@Test
-	public void parseFileShouldInvokeSourceParser() throws Exception {
-		// given
-		List<Path> javaPaths = prepareFilesPaths();
-		prepareSourcesArray();
-		// when
-		filesParser.parseFiles(javaPaths);
-		// then
-		verify(sourceParser, atLeast(javaPaths.size())).parseSource(
-				any(JavaSource.class));
-	}
+    @Test
+    public void parseFileShouldReturnExceptionWhenListIsNull() throws Exception {
+        // given
+        List<Path> javaPaths = null;
+        // when
+        catchException(filesParser).parseFiles(javaPaths);
+        // then
+        assertThat(caughtException()).isInstanceOf(NullPointerException.class)
+                .hasMessage("List of paths should not be null.");
+    }
 
-	@Test
-	public void parseFilesShouldReturnListWithAllParsedFiles() throws Exception {
-		// given
-		List<Path> javaPaths = prepareFilesPaths();
-		JavaSource[] javaSources = prepareSourcesArray();
-		// when
-		List<JavaFile> parsedFiles = filesParser.parseFiles(javaPaths);
-		// then
-		assertThat(parsedFiles).isNotNull().isNotEmpty()
-				.hasSize(javaSources.length);
-	}
+    @Test
+    public void parseFileShouldConvertPathToFile() throws Exception {
+        List<Path> javaPaths = prepareFilesPaths();
+        // when
+        filesParser.parseFiles(javaPaths);
+        // then
+        verify(path, atLeast(javaPaths.size())).toFile();
+    }
 
-	private JavaSource[] prepareSourcesArray() {
-		JavaSource[] javaSources = { mock(JavaSource.class),
-				mock(JavaSource.class), mock(JavaSource.class) };
-		when(javaDocBuilder.getSources()).thenReturn(javaSources);
-		return javaSources;
-	}
+    @Test
+    public void parseFileShouldInvokeSourceParser() throws Exception {
+        // given
+        List<Path> javaPaths = prepareFilesPaths();
+        prepareSourcesArray();
+        // when
+        filesParser.parseFiles(javaPaths);
+        // then
+        verify(sourceParser, atLeast(javaPaths.size())).parseSource(
+                any(JavaSource.class));
+    }
 
-	private List<Path> prepareFilesPaths() {
-		List<Path> javaPaths = newArrayList();
-		javaPaths.add(path);
-		javaPaths.add(path);
-		javaPaths.add(path);
-		return javaPaths;
-	}
+    @Test
+    public void parseFilesShouldReturnListWithAllParsedFiles() throws Exception {
+        // given
+        List<Path> javaPaths = prepareFilesPaths();
+        JavaSource[] javaSources = prepareSourcesArray();
+        // when
+        List<JavaFile> parsedFiles = filesParser.parseFiles(javaPaths);
+        // then
+        assertThat(parsedFiles).isNotNull().isNotEmpty()
+                .hasSize(javaSources.length);
+    }
+
+    private JavaSource[] prepareSourcesArray() {
+        JavaSource[] javaSources = {mock(JavaSource.class),
+            mock(JavaSource.class), mock(JavaSource.class)};
+        when(javaDocBuilder.getSources()).thenReturn(javaSources);
+        return javaSources;
+    }
+
+    private List<Path> prepareFilesPaths() {
+        path = mock(Path.class);
+        File file = mock(File.class);
+        when(path.toFile()).thenReturn(file);
+        List<Path> javaPaths = newArrayList();
+        javaPaths.add(path);
+        return javaPaths;
+    }
 }
