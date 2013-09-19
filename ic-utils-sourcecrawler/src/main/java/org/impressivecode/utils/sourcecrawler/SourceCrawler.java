@@ -17,6 +17,7 @@ package org.impressivecode.utils.sourcecrawler;
  You should have received a copy of the GNU General Public License
  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+import com.google.common.collect.Iterables;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -46,6 +47,9 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import static com.google.common.collect.Lists.newArrayList;
+import com.thoughtworks.qdox.parser.ParseException;
+import org.apache.log4j.Logger;
 
 /**
  * Goal which touches a timestamp file.
@@ -55,6 +59,8 @@ import java.util.List;
  */
 @Mojo(name = "scann")
 public class SourceCrawler extends AbstractMojo {
+
+    private final static Logger logger = Logger.getLogger(SourceCrawler.class);
 
     public void execute() throws MojoExecutionException {
         String root = ".";
@@ -81,7 +87,22 @@ public class SourceCrawler extends AbstractMojo {
     private List<JavaFile> prepareFileList(String filesToParse) throws IOException,
             FileNotFoundException {
         List<Path> scanDirectoryFiles = generateFileList(filesToParse);
-        List<JavaFile> parseFiles = generateFilesListToParse(scanDirectoryFiles);
+        logger.debug("Files to parse: " + scanDirectoryFiles.size());
+        Iterable<List<Path>> partition = Iterables.partition(scanDirectoryFiles, 1);
+        List<JavaFile> parseFiles = newArrayList();
+        for (List<Path> list : partition) {
+            try {
+                parseFiles.addAll(generateFilesListToParse(list));
+            } catch (ParseException | NullPointerException e) {
+                logger.error("Error while scanning: ");
+                for (Path path : list) {
+                    logger.error("-- " + path.getFileName());
+                }
+
+            }
+        }
+        logger.debug("Files parsed: " + parseFiles.size());
+        logger.debug("Files ommitted: " + (scanDirectoryFiles.size() - parseFiles.size()));
         return parseFiles;
     }
 
