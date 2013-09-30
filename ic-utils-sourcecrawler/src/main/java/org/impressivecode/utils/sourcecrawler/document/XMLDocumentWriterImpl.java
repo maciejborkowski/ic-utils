@@ -40,13 +40,13 @@ public class XMLDocumentWriterImpl implements DocumentWriter {
     private void writeFilesToDocument(List<JavaFile> parseFiles, Element root) {
         for (JavaFile javaFile : parseFiles) {
             Element file = root.addElement("file");
-            Element classesElement = prepareFileElements(javaFile, file);
+            prepareFileElements(javaFile, file);
             List<JavaClazz> classes = javaFile.getClasses();
-            writeClassesToFile(classesElement, classes);
+            writeClassesToFile(file, classes);
         }
     }
 
-    private Element prepareFileElements(JavaFile javaFile, Element file) {
+    private void prepareFileElements(JavaFile javaFile, Element file) {
 
         file.addElement("path").setText(javaFile.getFilePath());
         String packageName = javaFile.getPackageName();
@@ -54,8 +54,6 @@ public class XMLDocumentWriterImpl implements DocumentWriter {
             packageName = "default";
         }
         file.addElement("package").addText(packageName);
-        Element classesElement = file.addElement("classes");
-        return classesElement;
     }
 
     private void writeClassesToFile(Element classesElement,
