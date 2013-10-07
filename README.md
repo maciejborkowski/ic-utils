@@ -37,7 +37,11 @@ mvn org.impressivecode.utils.sourcecrawler:ic-utils-sourcecrawler:1.0.0:scann
 ```
 
 Plugin generate output file source crawler.xml in root directory of project.
-
+<h3>How to install maven artifact</h3>
+```
+mvn install:install-file -Dfile=ic-utils-sourcecrawler-1.0.0-snapshot.jar -DgroupId=org.impressivecode.utils.sourcecrawler
+ -DartifactId=ic-utils-sourcecrawler -Dpackaging=jar -Dversion=1.0.0
+```
 <h3>How to use plugin as standalone scanner</h3>
 
 In directory which contains plugins jar invoke followed command:
