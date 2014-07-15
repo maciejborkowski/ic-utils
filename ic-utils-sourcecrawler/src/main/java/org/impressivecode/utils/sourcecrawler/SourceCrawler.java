@@ -34,13 +34,10 @@ import org.impressivecode.utils.sourcecrawler.parser.FilesParserImpl;
 import org.impressivecode.utils.sourcecrawler.parser.SourceParser;
 import org.impressivecode.utils.sourcecrawler.parser.SourceParserImpl;
 
-import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
@@ -50,7 +47,6 @@ import java.util.List;
 /**
  * Goal which touches a timestamp file.
  *
- * @goal scann
  * @phase process-sources
  */
 @Mojo(name = "scann")
@@ -66,13 +62,12 @@ public class SourceCrawler extends AbstractMojo {
         getLog().info("Start scann files.");
         try {
             List<JavaFile> parsedFiles = prepareFileList(input);
-
+            
             DocumentWriter writer = new XMLDocumentWriterImpl(
                     output);
             writer.write(parsedFiles);
         } catch (IOException e) {
             getLog().error(e.getMessage());
-            e.printStackTrace();
             throw new MojoExecutionException(e.getMessage());
         }
         getLog().info("Finish.");
@@ -86,9 +81,8 @@ public class SourceCrawler extends AbstractMojo {
     }
 
     private List<JavaFile> generateFilesListToParse(
-            List<Path> scanDirectoryFiles) throws FileNotFoundException,
-            IOException {
-        JavaDocBuilder builder = new JavaDocBuilder();
+            List<Path> scanDirectoryFiles) throws IOException {
+    	JavaProjectBuilder builder = new JavaProjectBuilder();
         SourceParser sourceParser = new SourceParserImpl();
         FilesParser fileParser = new FilesParserImpl(builder, sourceParser);
         return fileParser.parseFiles(scanDirectoryFiles);

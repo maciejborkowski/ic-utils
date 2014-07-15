@@ -17,7 +17,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.impressivecode.utils.sourcecrawler.parser;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -32,6 +31,6 @@ import org.impressivecode.utils.sourcecrawler.model.JavaFile;
 
 public interface FilesParser {
 
-	List<JavaFile> parseFiles(List<Path> javaPaths) throws FileNotFoundException, IOException;
+	List<JavaFile> parseFiles(List<Path> javaPaths) throws IOException;
 
 }

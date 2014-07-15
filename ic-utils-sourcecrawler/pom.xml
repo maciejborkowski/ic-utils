@@ -25,11 +25,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-utils</artifactId>
-            <version>3.0.8</version>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8</version>
@@ -54,9 +49,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>qdox</groupId>
+            <groupId>com.thoughtworks.qdox</groupId>
             <artifactId>qdox</artifactId>
-            <version>1.6.1</version>
+            <version>2.0-M1</version>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
@@ -68,7 +63,6 @@
             <artifactId>args4j</artifactId>
             <version>2.0.25</version>
         </dependency>
-            
     </dependencies>
     <build>
         <plugins>
@@ -117,6 +111,30 @@
                     <finalName>uber-${artifactId}-${version}</finalName>
                 </configuration>
             </plugin>
+            <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-plugin-plugin</artifactId>
+	            <version>3.2</version>
+	            <configuration>
+	                <goalPrefix>mysql-jdbc-compliance</goalPrefix>
+	            </configuration>
+	            <executions>
+	                <execution>
+	                    <id>default-descriptor</id>
+	                    <goals>
+	                        <goal>descriptor</goal>
+	                    </goals>
+	                    <phase>process-classes</phase>
+	                </execution>
+	                <execution>
+	                    <id>help-descriptor</id>
+	                    <goals>
+	                        <goal>helpmojo</goal>
+	                    </goals>
+	                    <phase>process-classes</phase>
+	                </execution>
+	            </executions>
+	        </plugin>
         </plugins>
     </build>
 </project>

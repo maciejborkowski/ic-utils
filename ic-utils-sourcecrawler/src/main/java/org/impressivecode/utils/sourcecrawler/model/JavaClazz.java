@@ -29,6 +29,7 @@ public class JavaClazz {
 	private boolean isException;
 	private boolean isTest;
 	private boolean isInner;
+	
 	public String getClassName() {
 		return className;
 	}

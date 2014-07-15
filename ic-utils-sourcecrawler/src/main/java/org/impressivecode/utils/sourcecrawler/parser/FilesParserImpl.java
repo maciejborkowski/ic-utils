@@ -18,15 +18,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package org.impressivecode.utils.sourcecrawler.parser;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.logging.Logger;
+
 import static com.google.common.collect.Lists.*;
 import static com.google.common.base.Preconditions.*;
+
+import org.impressivecode.utils.sourcecrawler.Main;
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
 
-import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 
 /**
@@ -36,18 +39,18 @@ import com.thoughtworks.qdox.model.JavaSource;
  */
 
 public class FilesParserImpl implements FilesParser {
-	private JavaDocBuilder javaDocBuilder;
+	private JavaProjectBuilder javaProjectBuilder;
 	private SourceParser sourceParser;
 
-	public FilesParserImpl(JavaDocBuilder javaDockBuilder,
+	public FilesParserImpl(JavaProjectBuilder javaProjectBuilder,
 			SourceParser sourceParser) {
-		this.javaDocBuilder = javaDockBuilder;
+		this.javaProjectBuilder = javaProjectBuilder;
 		this.sourceParser = sourceParser;
 	}
 
 	@Override
 	public List<JavaFile> parseFiles(List<Path> javaPaths)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		checkNotNull(javaPaths, "List of paths should not be null.");
 		List<JavaSource> javaSources = iterateByPaths(javaPaths);
 		List<JavaFile> javaFiles = getJavaFilesFromSource(javaSources);
@@ -64,12 +67,16 @@ public class FilesParserImpl implements FilesParser {
 	}
 
 	private List<JavaSource> iterateByPaths(List<Path> javaPaths)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		for (Path path : javaPaths) {
 			File fileToParse = path.toFile();
-			javaDocBuilder.addSource(fileToParse);
+			try{
+				javaProjectBuilder.addSource(fileToParse);
+			} catch (RuntimeException e){
+				Logger.getLogger(Main.class.getName()).severe("COULD NOT PARSE "+path+" FILE");
+			}
 		}
-		List<JavaSource> javaFiles = newArrayList(javaDocBuilder.getSources());
+		List<JavaSource> javaFiles = newArrayList(javaProjectBuilder.getSources());
 		return javaFiles;
 	}
 }

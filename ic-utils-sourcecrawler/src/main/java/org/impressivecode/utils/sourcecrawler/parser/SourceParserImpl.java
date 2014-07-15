@@ -26,12 +26,12 @@ import org.impressivecode.utils.sourcecrawler.model.JavaClazz;
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
 
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaSource;
 
 import static com.google.common.collect.Lists.newArrayList;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -74,7 +74,7 @@ public class SourceParserImpl implements SourceParser {
     }
 
     private List<JavaClazz> parseClasses(JavaSource sourceToParse) {
-        JavaClass[] javaClasses = sourceToParse.getClasses();
+        List<JavaClass> javaClasses = sourceToParse.getClasses();
         List<JavaClazz> parsedClasses = newArrayList();
         for (JavaClass javaClass : javaClasses) {
             JavaClazz analyzedClass = analyzeClass(javaClass);
@@ -93,8 +93,12 @@ public class SourceParserImpl implements SourceParser {
     }
 
     private void setupPackage(JavaSource sourceToParse, JavaFile javaFile) {
-        String packageName = sourceToParse.getPackage();
-        javaFile.setPackageName(packageName);
+        JavaPackage jPackage = sourceToParse.getPackage();
+        if(jPackage != null){
+	        String packageName = jPackage.getName();
+	        javaFile.setPackageName(packageName);
+        }
+        else javaFile.setPackageName("");
     }
 
     @Override

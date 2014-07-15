@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
@@ -22,12 +23,12 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 
 public class FileParserTest {
 	@Mock
-	private JavaDocBuilder javaDocBuilder;
+	private JavaProjectBuilder JavaProjectBuilder;
 
 	@Mock
 	private SourceParser sourceParser;
@@ -38,9 +39,9 @@ public class FileParserTest {
 	@BeforeMethod
 	public void beforeMethod() {
 		MockitoAnnotations.initMocks(this);
-		filesParser = new FilesParserImpl(javaDocBuilder, sourceParser);
-		JavaSource[] javaSources = {};
-		when(javaDocBuilder.getSources()).thenReturn(javaSources);
+		filesParser = new FilesParserImpl(JavaProjectBuilder, sourceParser);
+		List<JavaSource> javaSources = new ArrayList<JavaSource>();
+		when(JavaProjectBuilder.getSources()).thenReturn(javaSources);
 	}
 
 	@Test
@@ -61,7 +62,7 @@ public class FileParserTest {
 		// when
 		filesParser.parseFiles(javaPaths);
 		// then
-		verify(javaDocBuilder, atLeast(javaPaths.size())).addSource(
+		verify(JavaProjectBuilder, atLeast(javaPaths.size())).addSource(
 				any(File.class));
 	}
 
@@ -101,18 +102,20 @@ public class FileParserTest {
 	public void parseFilesShouldReturnListWithAllParsedFiles() throws Exception {
 		// given
 		List<Path> javaPaths = prepareFilesPaths();
-		JavaSource[] javaSources = prepareSourcesArray();
+		List<JavaSource> javaSources = prepareSourcesArray();
 		// when
 		List<JavaFile> parsedFiles = filesParser.parseFiles(javaPaths);
 		// then
 		assertThat(parsedFiles).isNotNull().isNotEmpty()
-				.hasSize(javaSources.length);
+				.hasSize(javaSources.size());
 	}
 
-	private JavaSource[] prepareSourcesArray() {
-		JavaSource[] javaSources = { mock(JavaSource.class),
-				mock(JavaSource.class), mock(JavaSource.class) };
-		when(javaDocBuilder.getSources()).thenReturn(javaSources);
+	private List<JavaSource> prepareSourcesArray() {
+		List<JavaSource> javaSources = new ArrayList<JavaSource>();
+		javaSources.add(mock(JavaSource.class));
+		javaSources.add(mock(JavaSource.class));
+		javaSources.add(mock(JavaSource.class));
+		when(JavaProjectBuilder.getSources()).thenReturn(javaSources);
 		return javaSources;
 	}
 
