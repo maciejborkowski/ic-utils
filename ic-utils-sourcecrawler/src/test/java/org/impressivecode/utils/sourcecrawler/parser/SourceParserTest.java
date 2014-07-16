@@ -53,7 +53,7 @@ public class SourceParserTest {
         JavaSource javaSource1 = mock(JavaSource.class);
         when(javaClass.getSource()).thenReturn(javaSource1);
 		// when
-		JavaClazz javaClazz = sourceParser.analyzeClass(javaClass);
+		JavaClazz javaClazz = sourceParser.analyzeClassQDOX(javaClass);
 		// then
 		assertThat(javaClazz.getClassType()).isNotNull().isSameAs(classType);
 	}
@@ -78,7 +78,7 @@ public class SourceParserTest {
         JavaSource javaSource1 = mock(JavaSource.class);
         when(javaClass.getSource()).thenReturn(javaSource1);
 		// when
-		JavaClazz clazz = sourceParser.analyzeClass(javaClass);
+		JavaClazz clazz = sourceParser.analyzeClassQDOX(javaClass);
 		// then
 		assertThat(clazz.getClassName()).isNotNull().isNotEmpty()
 				.isEqualTo("sampleName");
@@ -92,10 +92,11 @@ public class SourceParserTest {
         when(javaClass.getSource()).thenReturn(javaSource1);
 		when(javaClass.isInner()).thenReturn(true);
 		//when
-		JavaClazz clazz = sourceParser.analyzeClass(javaClass);
+		JavaClazz clazz = sourceParser.analyzeClassQDOX(javaClass);
 		//then
 		assertTrue(clazz.isInner());
 	}
+	
 	@DataProvider(name = "java-class-data")
 	public Object[][] classTypeDataProvider() {
 		JavaClass abstractClass = mock(JavaClass.class);

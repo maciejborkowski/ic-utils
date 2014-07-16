@@ -77,7 +77,8 @@ public class SourceParserImpl implements SourceParser {
         List<JavaClass> javaClasses = sourceToParse.getClasses();
         List<JavaClazz> parsedClasses = newArrayList();
         for (JavaClass javaClass : javaClasses) {
-            JavaClazz analyzedClass = analyzeClass(javaClass);
+            JavaClazz analyzedClass = analyzeClassQDOX(javaClass);
+            additionalAnalyzeClass(analyzedClass);
             parsedClasses.add(analyzedClass);
         }
         return parsedClasses;
@@ -102,17 +103,32 @@ public class SourceParserImpl implements SourceParser {
     }
 
     @Override
-    public JavaClazz analyzeClass(JavaClass javaClass) {
+    public JavaClazz analyzeClassQDOX(JavaClass javaClass) {
         JavaClazz javaClazz = checkClassType(javaClass);
         boolean isException = checkIsThrowable(javaClass);
 
         javaClazz.setException(isException);
         javaClazz.setClassName(javaClass.getName());
         javaClazz.setInner(javaClass.isInner());
+    
+
         return javaClazz;
     }
+    
+    @Override
+    public JavaClazz additionalAnalyzeClass(JavaClazz javaClazz){
+        //Additional checks on top of QDOX properties
+        if(!javaClazz.isTest()){
+        	javaClazz.setTest(checkForTests(javaClazz));
+        }
+    	return javaClazz;
+    }
 
-    private JavaClazz checkClassType(JavaClass javaClass) {
+    private boolean checkForTests(JavaClazz javaClazz) {
+		return (javaClazz.getClassName().endsWith("Test") || javaClazz.getClassName().endsWith("Tests"));
+	}
+
+	private JavaClazz checkClassType(JavaClass javaClass) {
         JavaClazz javaClazz = new JavaClazz();
         if (javaClass.isEnum()) {
             javaClazz.setClassType(ClazzType.ENUM);
