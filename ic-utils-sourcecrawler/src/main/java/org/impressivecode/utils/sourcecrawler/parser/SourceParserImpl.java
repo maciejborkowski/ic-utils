@@ -17,6 +17,7 @@
  */
 package org.impressivecode.utils.sourcecrawler.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.impressivecode.utils.sourcecrawler.files.FileHelper;
@@ -62,9 +63,7 @@ public class SourceParserImpl implements SourceParser {
         JavaFile javaFile = new JavaFile();
         try {
             setupPackage(sourceToParse, javaFile);
-
             setupPath(sourceToParse, javaFile);
-
             List<JavaClazz> parsedClasses = parseClasses(sourceToParse);
             javaFile.setClasses(parsedClasses);
         } catch (URISyntaxException | IOException ex) {
@@ -75,10 +74,12 @@ public class SourceParserImpl implements SourceParser {
 
     private List<JavaClazz> parseClasses(JavaSource sourceToParse) {
         List<JavaClass> javaClasses = sourceToParse.getClasses();
+        List<JavaClass> allClasses = new ArrayList<JavaClass>(javaClasses);
+        allClasses.addAll(findNestedClasses(javaClasses));
         List<JavaClazz> parsedClasses = newArrayList();
-        for (JavaClass javaClass : javaClasses) {
+        for (JavaClass javaClass : allClasses) {
             JavaClazz analyzedClass = analyzeClassQDOX(javaClass);
-            additionalAnalyzeClass(analyzedClass);
+            additionalAnalyzeClass(analyzedClass, javaClass);
             parsedClasses.add(analyzedClass);
         }
         return parsedClasses;
@@ -110,23 +111,33 @@ public class SourceParserImpl implements SourceParser {
         javaClazz.setException(isException);
         javaClazz.setClassName(javaClass.getName());
         javaClazz.setInner(javaClass.isInner());
-    
 
         return javaClazz;
     }
     
     @Override
-    public JavaClazz additionalAnalyzeClass(JavaClazz javaClazz){
+    public JavaClazz additionalAnalyzeClass(JavaClazz javaClazz, JavaClass javaClass){
         //Additional checks on top of QDOX properties
         if(!javaClazz.isTest()){
         	javaClazz.setTest(checkForTests(javaClazz));
         }
+        
     	return javaClazz;
     }
 
     private boolean checkForTests(JavaClazz javaClazz) {
 		return (javaClazz.getClassName().endsWith("Test") || javaClazz.getClassName().endsWith("Tests"));
 	}
+    
+    private List<JavaClass> findNestedClasses(List<JavaClass> javaClasses){
+    	List<JavaClass> nestedClasses = new ArrayList<JavaClass>();
+    	for(JavaClass aClass: javaClasses){
+    		if(aClass.getNestedClasses().size() != 0){
+	    		nestedClasses.addAll(aClass.getNestedClasses());
+    		}
+    	}
+    	return nestedClasses;
+    }
 
 	private JavaClazz checkClassType(JavaClass javaClass) {
         JavaClazz javaClazz = new JavaClazz();
