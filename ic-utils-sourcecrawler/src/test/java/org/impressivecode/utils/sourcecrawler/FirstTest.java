@@ -27,7 +27,7 @@ import org.impressivecode.utils.sourcecrawler.parser.SourceParser;
 import org.impressivecode.utils.sourcecrawler.parser.SourceParserImpl;
 import org.testng.annotations.Test;
 
-import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 
 public class FirstTest {
 	@Test(enabled = false)
@@ -40,7 +40,7 @@ public class FirstTest {
 		List<Path> list = new ArrayList<Path>();
 		FileProcessor fileProcessor = new FileProcessorImpl(list, matcher);
 		List<Path> scanDirectoryFiles = fileScanner.scanDirectoryFiles(path, fileProcessor);
-		JavaDocBuilder builder = new JavaDocBuilder();
+		JavaProjectBuilder builder = new JavaProjectBuilder();
 		SourceParser sourceParser = new SourceParserImpl();
 		FilesParser fileParser = new FilesParserImpl(builder, sourceParser);
 		List<JavaFile> parseFiles = fileParser.parseFiles(scanDirectoryFiles);

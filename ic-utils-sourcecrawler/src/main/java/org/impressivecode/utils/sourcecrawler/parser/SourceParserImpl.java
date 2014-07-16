@@ -26,12 +26,12 @@ import org.impressivecode.utils.sourcecrawler.model.JavaClazz;
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
 
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaPackage;
 import com.thoughtworks.qdox.model.JavaSource;
 
 import static com.google.common.collect.Lists.newArrayList;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -74,10 +74,11 @@ public class SourceParserImpl implements SourceParser {
     }
 
     private List<JavaClazz> parseClasses(JavaSource sourceToParse) {
-        JavaClass[] javaClasses = sourceToParse.getClasses();
+        List<JavaClass> javaClasses = sourceToParse.getClasses();
         List<JavaClazz> parsedClasses = newArrayList();
         for (JavaClass javaClass : javaClasses) {
-            JavaClazz analyzedClass = analyzeClass(javaClass);
+            JavaClazz analyzedClass = analyzeClassQDOX(javaClass);
+            additionalAnalyzeClass(analyzedClass);
             parsedClasses.add(analyzedClass);
         }
         return parsedClasses;
@@ -93,22 +94,41 @@ public class SourceParserImpl implements SourceParser {
     }
 
     private void setupPackage(JavaSource sourceToParse, JavaFile javaFile) {
-        String packageName = sourceToParse.getPackage();
-        javaFile.setPackageName(packageName);
+        JavaPackage jPackage = sourceToParse.getPackage();
+        if(jPackage != null){
+	        String packageName = jPackage.getName();
+	        javaFile.setPackageName(packageName);
+        }
+        else javaFile.setPackageName("");
     }
 
     @Override
-    public JavaClazz analyzeClass(JavaClass javaClass) {
+    public JavaClazz analyzeClassQDOX(JavaClass javaClass) {
         JavaClazz javaClazz = checkClassType(javaClass);
         boolean isException = checkIsThrowable(javaClass);
 
         javaClazz.setException(isException);
         javaClazz.setClassName(javaClass.getName());
         javaClazz.setInner(javaClass.isInner());
+    
+
         return javaClazz;
     }
+    
+    @Override
+    public JavaClazz additionalAnalyzeClass(JavaClazz javaClazz){
+        //Additional checks on top of QDOX properties
+        if(!javaClazz.isTest()){
+        	javaClazz.setTest(checkForTests(javaClazz));
+        }
+    	return javaClazz;
+    }
 
-    private JavaClazz checkClassType(JavaClass javaClass) {
+    private boolean checkForTests(JavaClazz javaClazz) {
+		return (javaClazz.getClassName().endsWith("Test") || javaClazz.getClassName().endsWith("Tests"));
+	}
+
+	private JavaClazz checkClassType(JavaClass javaClass) {
         JavaClazz javaClazz = new JavaClazz();
         if (javaClass.isEnum()) {
             javaClazz.setClassType(ClazzType.ENUM);

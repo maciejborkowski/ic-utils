@@ -2,7 +2,7 @@ package org.impressivecode.utils.sourcecrawler.parser;
 
 import static org.testng.Assert.*;
 
-import java.net.URL;
+import java.util.ArrayList;
 
 import org.impressivecode.utils.sourcecrawler.files.FileHelper;
 import org.impressivecode.utils.sourcecrawler.model.ClazzType;
@@ -13,17 +13,12 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static com.google.common.collect.Lists.newArrayList;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaSource;
+import com.thoughtworks.qdox.model.impl.DefaultJavaPackage;
 
 public class SourceParserTest {
 	@Mock
@@ -37,14 +32,14 @@ public class SourceParserTest {
 	public void beforeMethod() {
 		MockitoAnnotations.initMocks(this);
 		sourceParser = new SourceParserImpl(fileHelper);
-		JavaClass[] javaClasses = {};
+		ArrayList<JavaClass> javaClasses = new ArrayList<JavaClass>();
 		when(javaSource.getClasses()).thenReturn(javaClasses);
 	}
 
 	@Test
 	public void sourceParserShouldSetupFilePackageName() throws Exception {
 		// given
-		when(javaSource.getPackage()).thenReturn(EXAMPLE_PACKAGE);
+		when(javaSource.getPackage()).thenReturn(new DefaultJavaPackage(EXAMPLE_PACKAGE));
 		// when
 		JavaFile javaFile = sourceParser.parseSource(javaSource);
 		// then
@@ -58,7 +53,7 @@ public class SourceParserTest {
         JavaSource javaSource1 = mock(JavaSource.class);
         when(javaClass.getSource()).thenReturn(javaSource1);
 		// when
-		JavaClazz javaClazz = sourceParser.analyzeClass(javaClass);
+		JavaClazz javaClazz = sourceParser.analyzeClassQDOX(javaClass);
 		// then
 		assertThat(javaClazz.getClassType()).isNotNull().isSameAs(classType);
 	}
@@ -83,7 +78,7 @@ public class SourceParserTest {
         JavaSource javaSource1 = mock(JavaSource.class);
         when(javaClass.getSource()).thenReturn(javaSource1);
 		// when
-		JavaClazz clazz = sourceParser.analyzeClass(javaClass);
+		JavaClazz clazz = sourceParser.analyzeClassQDOX(javaClass);
 		// then
 		assertThat(clazz.getClassName()).isNotNull().isNotEmpty()
 				.isEqualTo("sampleName");
@@ -97,10 +92,11 @@ public class SourceParserTest {
         when(javaClass.getSource()).thenReturn(javaSource1);
 		when(javaClass.isInner()).thenReturn(true);
 		//when
-		JavaClazz clazz = sourceParser.analyzeClass(javaClass);
+		JavaClazz clazz = sourceParser.analyzeClassQDOX(javaClass);
 		//then
 		assertTrue(clazz.isInner());
 	}
+	
 	@DataProvider(name = "java-class-data")
 	public Object[][] classTypeDataProvider() {
 		JavaClass abstractClass = mock(JavaClass.class);

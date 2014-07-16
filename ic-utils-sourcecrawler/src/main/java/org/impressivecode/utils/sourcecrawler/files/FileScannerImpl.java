@@ -19,7 +19,6 @@ package org.impressivecode.utils.sourcecrawler.files;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.*;
