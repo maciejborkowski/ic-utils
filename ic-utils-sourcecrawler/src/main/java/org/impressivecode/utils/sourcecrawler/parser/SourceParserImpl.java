@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.impressivecode.utils.sourcecrawler.files.FileHelper;
 import org.impressivecode.utils.sourcecrawler.files.FileHelperImpl;
+import org.impressivecode.utils.sourcecrawler.model.ClazzAccess;
 import org.impressivecode.utils.sourcecrawler.model.ClazzType;
 import org.impressivecode.utils.sourcecrawler.model.JavaClazz;
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
@@ -40,6 +41,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Paweł Nosal
+ * @author Maciej Borkowski
  */
 public class SourceParserImpl implements SourceParser {
 
@@ -105,17 +107,20 @@ public class SourceParserImpl implements SourceParser {
 
     @Override
     public JavaClazz analyzeClassQDOX(JavaClass javaClass) {
-        JavaClazz javaClazz = checkClassType(javaClass);
+        JavaClazz javaClazz = new JavaClazz();
+        checkClassType(javaClass, javaClazz);
+        checkClassAccess(javaClass, javaClazz);
+        
         boolean isException = checkIsThrowable(javaClass);
-
         javaClazz.setException(isException);
+        
         javaClazz.setClassName(javaClass.getName());
         javaClazz.setInner(javaClass.isInner());
-
+        javaClazz.setFinal(javaClass.isFinal());
         return javaClazz;
     }
-    
-    @Override
+
+	@Override
     public JavaClazz additionalAnalyzeClass(JavaClazz javaClazz, JavaClass javaClass){
         //Additional checks on top of QDOX properties
         if(!javaClazz.isTest()){
@@ -139,8 +144,7 @@ public class SourceParserImpl implements SourceParser {
     	return nestedClasses;
     }
 
-	private JavaClazz checkClassType(JavaClass javaClass) {
-        JavaClazz javaClazz = new JavaClazz();
+	private void checkClassType(JavaClass javaClass, JavaClazz javaClazz) {
         if (javaClass.isEnum()) {
             javaClazz.setClassType(ClazzType.ENUM);
         } else if (javaClass.isInterface()) {
@@ -152,8 +156,19 @@ public class SourceParserImpl implements SourceParser {
             boolean b = fileHelper.isTest(javaClass.getSource());
             javaClazz.setTest(b);
         }
-        return javaClazz;
     }
+	
+    private void checkClassAccess(JavaClass javaClass, JavaClazz javaClazz) {
+        if (javaClass.isProtected()) {
+            javaClazz.setClassAccess(ClazzAccess.PROTECTED);
+        } else if (javaClass.isInterface()) {
+            javaClazz.setClassAccess(ClazzAccess.PRIVATE);
+        } else if (javaClass.isAbstract()) {
+            javaClazz.setClassAccess(ClazzAccess.PUBLIC);
+        } else {
+            javaClazz.setClassAccess(ClazzAccess.PACKAGE);
+        }	
+	}
 
     @Override
     public boolean checkIsThrowable(JavaClass javaClass) {

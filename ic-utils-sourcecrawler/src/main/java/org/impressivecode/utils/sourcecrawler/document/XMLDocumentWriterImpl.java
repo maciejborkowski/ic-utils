@@ -56,15 +56,19 @@ public class XMLDocumentWriterImpl implements DocumentWriter {
 			List<JavaClazz> classes) {
 		for (JavaClazz javaClazz : classes) {
 			Element classElement = classesElement.addElement("class");
+			classElement.addElement("name").setText(javaClazz.getClassName());
+			classElement.addElement("access").setText(
+					javaClazz.getClassAccess().getAccess());
 			classElement.addElement("type").setText(
 					javaClazz.getClassType().getName());
-			classElement.addElement("name").setText(javaClazz.getClassName());
 			classElement.addElement("exception").setText(
 					Boolean.toString(javaClazz.isException()));
 			classElement.addElement("inner").setText(
 					Boolean.toString(javaClazz.isInner()));
             classElement.addElement("test").setText(
                     Boolean.toString(javaClazz.isTest()));
+            classElement.addElement("final").setText(
+                    Boolean.toString(javaClazz.isFinal()));
 		}
 	}
 
