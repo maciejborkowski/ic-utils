@@ -72,7 +72,10 @@ public class SourceCrawler extends AbstractMojo {
         }
         getLog().info("Finish.");
     }
-
+    public List<JavaFile> executeCleanly(String input) throws FileNotFoundException, IOException{
+		return prepareFileList(input);
+    }
+    
     private List<JavaFile> prepareFileList(String filesToParse) throws IOException,
             FileNotFoundException {
         List<Path> scanDirectoryFiles = generateFileList(filesToParse);
