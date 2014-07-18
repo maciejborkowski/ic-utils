@@ -37,16 +37,12 @@ mvn org.impressivecode.utils.sourcecrawler:ic-utils-sourcecrawler:1.0.0:scann
 ```
 
 Plugin generate output file source crawler.xml in root directory of project.
-<h3>How to install maven artifact</h3>
-```
-mvn install:install-file -Dfile=ic-utils-sourcecrawler-1.0.0-snapshot.jar -DgroupId=org.impressivecode.utils.sourcecrawler
- -DartifactId=ic-utils-sourcecrawler -Dpackaging=jar -Dversion=1.0.0
-```
+
 <h3>How to use plugin as standalone scanner</h3>
 
 In directory which contains plugins jar invoke followed command:
 ```
-java -jar ic-utils-sourcecrawler-1.0.0-snapshot.jar -i ./dir/to/scan -o ./dir/output.xml
+java -jar uber-ic-utils-sourcecrawler-1.0.0.jar -i ./dir/to/scan -o ./dir/output.xml
 ```
 Mandatory flag is -i (--input). This flag shows where start scanning project's files. Optional flag is -o (--output) which shows where to save output in xml.
 
@@ -57,28 +53,32 @@ Sample output xml file:
 ```xml
 <root>
   <file>
-    <path>.\ic-utils\ic-utils-sourcecrawler\src\main\java\org\impressivecode\utils\sourcecrawler\document\DocumentWriter.java</path>
-    <package>org.impressivecode.utils.sourcecrawler.document</package>
+    <path>C:\workspace\sourcecrawler\ic-utils\ic-utils-sourcecrawler\src\main\java\org\impressivecode\utils\sourcecrawler\CommandLineValues.java</path>
+    <package>org.impressivecode.utils.sourcecrawler</package>
     <classes>
       <class>
-        <type>Interface</type>
-        <name>DocumentWriter</name>
+        <name>CommandLineValues</name>
+        <access>Package-private</access>
+        <type>Class</type>
         <exception>false</exception>
         <inner>false</inner>
         <test>false</test>
+        <final>false</final>
       </class>
     </classes>
   </file>
   <file>
-    <path>.\ic-utils\ic-utils-sourcecrawler\src\main\java\org\impressivecode\utils\sourcecrawler\document\XMLDocumentWriterImpl.java</path>
+    <path>C:\workspace\sourcecrawler\ic-utils\ic-utils-sourcecrawler\src\main\java\org\impressivecode\utils\sourcecrawler\document\DocumentWriter.java</path>
     <package>org.impressivecode.utils.sourcecrawler.document</package>
     <classes>
       <class>
-        <type>Class</type>
-        <name>XMLDocumentWriterImpl</name>
+        <name>DocumentWriter</name>
+        <access>Private</access>
+        <type>Interface</type>
         <exception>false</exception>
         <inner>false</inner>
         <test>false</test>
+        <final>false</final>
       </class>
     </classes>
   </file>
