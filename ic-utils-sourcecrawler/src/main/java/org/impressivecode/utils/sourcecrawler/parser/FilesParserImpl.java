@@ -21,12 +21,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import static com.google.common.collect.Lists.*;
 import static com.google.common.base.Preconditions.*;
 
-import org.impressivecode.utils.sourcecrawler.Main;
 import org.impressivecode.utils.sourcecrawler.model.JavaFile;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -68,12 +69,19 @@ public class FilesParserImpl implements FilesParser {
 
 	private List<JavaSource> iterateByPaths(List<Path> javaPaths)
 			throws IOException {
+		Logger logger = Logger.getLogger("ParseErrors");
+		FileHandler fh;
+        fh = new FileHandler("ParseErrors.log");  
+        logger.addHandler(fh);
+        SimpleFormatter formatter = new SimpleFormatter();  
+        fh.setFormatter(formatter);  
+
 		for (Path path : javaPaths) {
 			File fileToParse = path.toFile();
 			try{
 				javaProjectBuilder.addSource(fileToParse);
 			} catch (RuntimeException e){
-				Logger.getLogger(Main.class.getName()).severe("COULD NOT PARSE "+path+" FILE");
+			    logger.severe("COULD NOT PARSE " + path + " FILE");
 			}
 		}
 		List<JavaSource> javaFiles = newArrayList(javaProjectBuilder.getSources());
