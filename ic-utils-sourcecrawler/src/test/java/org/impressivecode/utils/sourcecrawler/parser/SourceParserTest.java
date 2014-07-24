@@ -97,6 +97,32 @@ public class SourceParserTest {
 		assertTrue(clazz.isInner());
 	}
 	
+	@Test
+	public void analyzeClassShouldBeTest() throws Exception {
+		//given
+		JavaClass javaClass = mock(JavaClass.class);
+		JavaClazz javaClazz = new JavaClazz();
+		javaClazz.setTest(false);
+		javaClazz.setClassName("SourceParserTest");
+		//when
+		javaClazz = sourceParser.additionalAnalyzeClass(javaClazz, javaClass);
+		//then
+		assertTrue(javaClazz.isTest());
+	}
+	
+	@Test
+	public void analyzeClassShouldBeTest2() throws Exception {
+		//given
+		JavaClass javaClass = mock(JavaClass.class);
+		JavaClazz javaClazz = new JavaClazz();
+		javaClazz.setTest(false);
+		javaClazz.setClassName("ManyTests");
+		//when
+		javaClazz = sourceParser.additionalAnalyzeClass(javaClazz, javaClass);
+		//then
+		assertTrue(javaClazz.isTest());
+	}
+	
 	@DataProvider(name = "java-class-data")
 	public Object[][] classTypeDataProvider() {
 		JavaClass abstractClass = mock(JavaClass.class);
