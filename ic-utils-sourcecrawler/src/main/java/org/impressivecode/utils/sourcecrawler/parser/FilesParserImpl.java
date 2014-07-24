@@ -36,6 +36,7 @@ import com.thoughtworks.qdox.model.JavaSource;
 /**
  * 
  * @author Paweł Nosal
+ * @author Maciej Borkowski, Capgemini Poland
  * 
  */
 

@@ -62,18 +62,21 @@ public class SourceCrawler extends AbstractMojo {
         getLog().info("Start scann files.");
         try {
             List<JavaFile> parsedFiles = prepareFileList(input);
-            
-            DocumentWriter writer = new XMLDocumentWriterImpl(
-                    output);
-            writer.write(parsedFiles);
-        } catch (IOException e) {
-            getLog().error(e.getMessage());
-            throw new MojoExecutionException(e.getMessage());
+            writeXMLDocument(parsedFiles, output);
+        } catch(IOException e){
+    		getLog().error(e.getMessage());
+    		throw new MojoExecutionException(e.getMessage());
         }
         getLog().info("Finish.");
     }
+    
     public List<JavaFile> executeCleanly(String input) throws FileNotFoundException, IOException{
 		return prepareFileList(input);
+    }
+    
+    public void writeXMLDocument(List<JavaFile> parsedFiles, String output) throws IOException {
+    		DocumentWriter writer = new XMLDocumentWriterImpl(output);
+    		writer.write(parsedFiles);
     }
     
     private List<JavaFile> prepareFileList(String filesToParse) throws IOException,
