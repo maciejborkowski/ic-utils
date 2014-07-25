@@ -16,15 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.impressivecode.utils.sourcecrawler.model;
-
 /**
- * 
  * @author Paweł Nosal
- * 
  */
-
 public enum ClazzType {
 	CLASS("Class"), ENUM("Enum"), INTERFACE("Interface"), ABSTRACT("Abstract");
+	
 	private String name;
 
 	private ClazzType(String name) {

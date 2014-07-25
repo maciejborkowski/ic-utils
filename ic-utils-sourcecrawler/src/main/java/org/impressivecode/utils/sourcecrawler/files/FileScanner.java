@@ -28,7 +28,6 @@ import java.util.List;
  */
 
 public interface FileScanner {
-
+	
 	List<Path> scanDirectoryFiles(Path pathToDirectory, FileProcessor fileProcessor) throws IOException;
-
 }

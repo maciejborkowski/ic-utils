@@ -28,7 +28,6 @@ import java.util.List;
  */
 
 public interface FileProcessor extends FileVisitor<Path> {
-
+	
 	List<Path> getPaths();
-
 }

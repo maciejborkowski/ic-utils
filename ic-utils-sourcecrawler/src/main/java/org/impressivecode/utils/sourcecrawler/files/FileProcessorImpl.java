@@ -31,8 +31,7 @@ import java.util.List;
  * 
  */
 
-public class FileProcessorImpl extends SimpleFileVisitor<Path> implements
-		FileProcessor {
+public class FileProcessorImpl extends SimpleFileVisitor<Path> implements FileProcessor {
 	private final List<Path> filesPaths;
 	private final PathMatcher pathMatcher;
 

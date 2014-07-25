@@ -33,7 +33,6 @@ import java.nio.file.PathMatcher;
  */
 
 public class FileHelperImpl implements FileHelper {
-
 	@Override
 	public boolean isDirectory(final Path path) {
 		return Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS);

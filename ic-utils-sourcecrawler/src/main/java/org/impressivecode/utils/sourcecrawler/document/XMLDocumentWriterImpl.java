@@ -25,7 +25,6 @@ public class XMLDocumentWriterImpl implements DocumentWriter {
 		Element root = document.addElement("root");
 		writeFilesToDocument(parseFiles, root);
 		writeDocument(document);
-
 	}
 
 	private void writeDocument(Document document) throws IOException {

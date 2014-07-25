@@ -32,14 +32,10 @@ import org.impressivecode.utils.sourcecrawler.model.JavaFile;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
-
 /**
- * 
  * @author Paweł Nosal
  * @author Maciej Borkowski, Capgemini Poland
- * 
  */
-
 public class FilesParserImpl implements FilesParser {
 	private JavaProjectBuilder javaProjectBuilder;
 	private SourceParser sourceParser;

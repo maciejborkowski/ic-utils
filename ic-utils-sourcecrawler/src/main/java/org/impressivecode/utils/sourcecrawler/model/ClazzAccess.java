@@ -16,15 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.impressivecode.utils.sourcecrawler.model;
-
 /**
- * 
  * @author Maciej Borkowski
- * 
  */
-
 public enum ClazzAccess {
 	PUBLIC("Public"), PROTECTED("Protected"), PRIVATE("Private"), PACKAGE("Package-private");
+	
 	private String access;
 
 	private ClazzAccess(String access) {

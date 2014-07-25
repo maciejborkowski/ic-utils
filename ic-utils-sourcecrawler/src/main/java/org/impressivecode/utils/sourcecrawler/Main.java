@@ -11,13 +11,10 @@ import java.util.logging.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
-
 /**
- *
  * @author nosal
  */
 public class Main {
-
     public static void main(String[] args) {
         try {
             CommandLineValues values = new CommandLineValues(args);

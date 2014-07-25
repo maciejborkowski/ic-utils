@@ -16,13 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.impressivecode.utils.sourcecrawler.model;
-
 /**
- * 
  * @author Paweł Nosal
  * @author Maciej Borkowski
  */
-
 public class JavaClazz {
 	private String className;
 	private ClazzType classType;
@@ -87,5 +84,4 @@ public class JavaClazz {
 	public void setFinal(boolean isFinal) {
 		this.isFinal = isFinal;
 	}
-
 }

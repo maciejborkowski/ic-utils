@@ -38,13 +38,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  * @author Paweł Nosal
  * @author Maciej Borkowski
  */
 public class SourceParserImpl implements SourceParser {
-
     private String throwableClassName;
     private FileHelper fileHelper;
 
@@ -90,7 +88,6 @@ public class SourceParserImpl implements SourceParser {
     private void setupPath(JavaSource sourceToParse, JavaFile javaFile) throws URISyntaxException, IOException {
         if (sourceToParse.getURL() != null) {
             URL url = sourceToParse.getURL();
-//            URI uri = url.toURI();
             File file = new File(url.getPath());
             javaFile.setFilePath(file.getCanonicalPath());
         }
@@ -110,10 +107,8 @@ public class SourceParserImpl implements SourceParser {
         JavaClazz javaClazz = new JavaClazz();
         checkClassType(javaClass, javaClazz);
         checkClassAccess(javaClass, javaClazz);
-        
-        boolean isException = checkIsThrowable(javaClass);
-        javaClazz.setException(isException);
-        
+       
+        javaClazz.setException(checkIsThrowable(javaClass));
         javaClazz.setClassName(javaClass.getName());
         javaClazz.setInner(javaClass.isInner());
         javaClazz.setFinal(javaClass.isFinal());
@@ -126,7 +121,6 @@ public class SourceParserImpl implements SourceParser {
         if(!javaClazz.isTest()){
         	javaClazz.setTest(checkForTests(javaClazz));
         }
-        
     	return javaClazz;
     }
 

@@ -9,13 +9,10 @@ import java.io.File;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-
 /**
- *
  * @author nosal
  */
 public class CommandLineValues {
-
     @Option(name = "-i", aliases = {"--input"}, required = true,
             usage = "directory to scann")
     private File source;

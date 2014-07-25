@@ -43,7 +43,6 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Goal which touches a timestamp file.
  *
@@ -51,7 +50,6 @@ import java.util.List;
  */
 @Mojo(name = "scann")
 public class SourceCrawler extends AbstractMojo {
-
     public void execute() throws MojoExecutionException {
         String root = ".";
         String path = "sourcecrawler.xml";
