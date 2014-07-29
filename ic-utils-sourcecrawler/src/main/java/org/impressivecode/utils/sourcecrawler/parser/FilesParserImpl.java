@@ -76,11 +76,14 @@ public class FilesParserImpl implements FilesParser {
 		for (Path path : javaPaths) {
 			File fileToParse = path.toFile();
 			try{
-				javaProjectBuilder.addSource(fileToParse);
+				synchronized(this) {
+					javaProjectBuilder.addSource(fileToParse);
+				}
 			} catch (RuntimeException e){
 			    logger.severe("COULD NOT PARSE " + path + " FILE");
 			}
 		}
+		fh.close();
 		List<JavaSource> javaFiles = newArrayList(javaProjectBuilder.getSources());
 		return javaFiles;
 	}
