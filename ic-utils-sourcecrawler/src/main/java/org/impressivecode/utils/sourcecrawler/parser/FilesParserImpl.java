@@ -76,11 +76,11 @@ public class FilesParserImpl implements FilesParser {
 		for (Path path : javaPaths) {
 			File fileToParse = path.toFile();
 			try{
-				synchronized(this) {
-					javaProjectBuilder.addSource(fileToParse);
-				}
+				javaProjectBuilder.addSource(fileToParse);
 			} catch (RuntimeException e){
-			    logger.severe("COULD NOT PARSE " + path + " FILE");
+				synchronized(this) {
+					logger.severe("COULD NOT PARSE " + path + " FILE");
+				}
 			}
 		}
 		fh.close();
