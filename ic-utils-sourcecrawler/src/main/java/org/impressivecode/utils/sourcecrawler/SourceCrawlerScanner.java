@@ -1,5 +1,4 @@
 package org.impressivecode.utils.sourcecrawler;
-
 /*
  ImpressiveCode Depress Framework Source Crawler
  Copyright (C) 2013 ImpressiveCode contributors
@@ -20,6 +19,7 @@ package org.impressivecode.utils.sourcecrawler;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.impressivecode.utils.sourcecrawler.document.DocumentWriter;
 import org.impressivecode.utils.sourcecrawler.document.XMLDocumentWriterImpl;
 import org.impressivecode.utils.sourcecrawler.files.FileHelper;
@@ -36,6 +36,7 @@ import org.impressivecode.utils.sourcecrawler.parser.SourceParserImpl;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -48,16 +49,20 @@ import java.util.List;
  *
  * @phase process-sources
  */
-@Mojo(name = "scann")
-public class SourceCrawler extends AbstractMojo {
+@Mojo(name = "scan")
+public class SourceCrawlerScanner extends AbstractMojo {
+	@Parameter(defaultValue = "${basedir}")
+    private String directory;
+	
     public void execute() throws MojoExecutionException {
-        String root = ".";
-        String path = "sourcecrawler.xml";
-        execute(root, path);
+    	File file = new File(directory);
+    	String directoryName = file.getName();
+        String path = "sourcecrawler" + directoryName + ".xml";
+        execute(directory, path);
     }
 
     public void execute(String input, String output) throws MojoExecutionException {
-        getLog().info("Start scann files.");
+        getLog().info("Start scan files.");
         try {
             List<JavaFile> parsedFiles = prepareFileList(input);
             writeXMLDocument(parsedFiles, output);
@@ -94,6 +99,7 @@ public class SourceCrawler extends AbstractMojo {
 
     private List<Path> generateFileList(String filesToParse) throws IOException {
         Path path = Paths.get(filesToParse);
+
         FileHelper fileHelper = new FileHelperImpl();
         PathMatcher matcher = fileHelper.getPathMatcher("glob:*.java");
         FileScanner fileScanner = new FileScannerImpl(fileHelper);

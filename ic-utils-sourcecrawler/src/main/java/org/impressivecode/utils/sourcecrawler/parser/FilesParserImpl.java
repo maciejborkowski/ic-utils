@@ -68,10 +68,10 @@ public class FilesParserImpl implements FilesParser {
 			throws IOException {
 		Logger logger = Logger.getLogger("ParseErrors");
 		FileHandler fh;
-        fh = new FileHandler("ParseErrors.log");  
+        fh = new FileHandler("ParseErrors.log", true);  
         logger.addHandler(fh);
         SimpleFormatter formatter = new SimpleFormatter();  
-        fh.setFormatter(formatter);  
+        fh.setFormatter(formatter); 
 
 		for (Path path : javaPaths) {
 			File fileToParse = path.toFile();

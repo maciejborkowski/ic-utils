@@ -19,6 +19,7 @@ package org.impressivecode.utils.sourcecrawler.files;
 
 import com.thoughtworks.qdox.model.JavaSource;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -38,4 +39,7 @@ public interface FileHelper {
 	PathMatcher getPathMatcher(String regExp);
 
     boolean isTest(JavaSource javaSource);
+    
+    public int countLines(File file) throws IOException;
+
 }

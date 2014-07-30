@@ -27,7 +27,7 @@ public class Main {
             if(values.getOutput()!=null && values.getOutput().isDirectory()){
                 output = new File(values.getOutput().getAbsoluteFile()+"sourcecrawler.xml");
             }
-            SourceCrawler sourceCrawler = new SourceCrawler();
+            SourceCrawlerScanner sourceCrawler = new SourceCrawlerScanner();
             sourceCrawler.execute(source.getPath(), output.getPath());
 
             parser.parseArgument(args);

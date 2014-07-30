@@ -14,7 +14,7 @@ import org.kohsuke.args4j.Option;
  */
 public class CommandLineValues {
     @Option(name = "-i", aliases = {"--input"}, required = true,
-            usage = "directory to scann")
+            usage = "directory to scan")
     private File source;
     @Option(name = "-o", aliases = {"--output"}, required = false,
             usage = "output file where xml file will be saved")

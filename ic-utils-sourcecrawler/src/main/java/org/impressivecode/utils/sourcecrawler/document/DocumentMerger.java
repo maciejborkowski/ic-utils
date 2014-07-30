@@ -1,4 +1,9 @@
 package org.impressivecode.utils.sourcecrawler.document;
+
+import java.io.IOException;
+
+import org.apache.maven.plugin.MojoFailureException;
+
 /*
 ImpressiveCode Depress Framework Source Crawler
 Copyright (C) 2013 ImpressiveCode contributors
@@ -16,11 +21,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-import java.io.IOException;
-import java.util.List;
-
-import org.impressivecode.utils.sourcecrawler.model.JavaFile;
-
-public interface DocumentWriter {
-	void write(List<JavaFile> parseFiles) throws IOException;
+/**
+ * @author Maciej Borkowski, Capgemini Poland
+ */
+public interface DocumentMerger {
+	void createMergedFile() throws SecurityException, IOException, MojoFailureException;
 }
