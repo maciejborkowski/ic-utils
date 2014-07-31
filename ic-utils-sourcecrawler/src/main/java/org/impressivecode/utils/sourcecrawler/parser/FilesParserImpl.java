@@ -79,7 +79,7 @@ public class FilesParserImpl implements FilesParser {
 				javaProjectBuilder.addSource(fileToParse);
 			} catch (RuntimeException e){
 				synchronized(this) {
-					logger.severe("COULD NOT PARSE " + path + " FILE");
+					logger.severe("Could not parse file. Reason: " + e.getMessage() + ". File omitted.");
 				}
 			}
 		}
