@@ -57,7 +57,7 @@ public class SourceCrawlerScanner extends AbstractMojo {
     public void execute() throws MojoExecutionException {
     	File file = new File(directory);
     	String directoryName = file.getName();
-        String path = "sourcecrawler" + directoryName + ".xml";
+        String path = "sourcecrawler-" + directoryName + ".xml";
         execute(directory, path);
     }
 

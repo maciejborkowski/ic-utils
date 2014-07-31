@@ -55,8 +55,7 @@ public class XMLDocumentMergerImpl implements DocumentMerger {
 		File dir = new File(directory);
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
-				if (name.startsWith("sourcecrawler") && name.endsWith(".xml")
-						&& !name.equals("sourcecrawler.xml")) {
+				if (name.startsWith("sourcecrawler-") && name.endsWith(".xml")) {
 					return true;
 				} else {
 					return false;

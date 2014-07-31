@@ -16,27 +16,33 @@ In plugin directory invoke following command:
 mvn clean install
 ```
 
-When plugin is installed in local repository, we can use it in own project by. Just only add it to pom file.
+When plugin is installed in local repository, we can use it in any project. Add it to pom.xml file.
 
 ```xml
 <build>
-        <plugins>
-            <plugin>
-                <groupId>org.impressivecode.utils.sourcecrawler</groupId>
-                <artifactId>ic-utils-sourcecrawler</artifactId>
-                <version>1.0.0</version>
-            </plugin>
+	<plugins>
+		<plugin>
+			<groupId>org.impressivecode.utils.sourcecrawler</groupId>
+			<artifactId>ic-utils-sourcecrawler</artifactId>
+			<version>1.0.0</version>
+		</plugin>
     </plugins>
 </build>
 ```
 
-Now we can use scan goal in project by follow command:
+Now we can execute scan goal in this project by following command:
 
 ```
-mvn org.impressivecode.utils.sourcecrawler:ic-utils-sourcecrawler:1.0.0:scann
+mvn org.impressivecode.utils.sourcecrawler:ic-utils-sourcecrawler:1.0.0:scan
 ```
 
-Plugin generate output file source crawler.xml in root directory of project.
+Plugin generates output sourcecrawler-<name-of-directory>.xml for every module in parent directory of project.
+
+You can execute another goal to merge those file into one sourcecrawler.xml using following command:
+
+```
+mvn org.impressivecode.utils.sourcecrawler:ic-utils-sourcecrawler:1.0.0:merge
+```
 
 <h3>How to use plugin as standalone scanner</h3>
 
