@@ -25,5 +25,5 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  * @author Maciej Borkowski, Capgemini Poland
  */
 public interface DocumentMerger {
-	void createMergedFile() throws IOException, MojoFailureException;
+	void createMergedFile(final String directory, final String output) throws IOException, MojoFailureException;
 }

@@ -36,22 +36,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  * @author Maciej Borkowski, Capgemini Poland
  */
 public class XMLDocumentMergerImpl implements DocumentMerger {
-	final String directory;
-	final String output;
 	
-	public XMLDocumentMergerImpl(final String directory, final String output) {
-		this.directory = directory;
-		this.output = output;
+	public XMLDocumentMergerImpl() {
 	}
 
 	@Override
-	public void createMergedFile() throws IOException, MojoFailureException {
-		List<File> files = findXMLFiles();
-		mergeXMLFiles(files);
+	public void createMergedFile(final String directory, final String output)
+			throws IOException, MojoFailureException {
+		List<File> files = findXMLFiles(directory);
+		mergeXMLFiles(files, output);
 		removeFiles(files);
 	}
 
-	private List<File> findXMLFiles() {
+	private List<File> findXMLFiles(final String directory) {
 		File dir = new File(directory);
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -66,7 +63,7 @@ public class XMLDocumentMergerImpl implements DocumentMerger {
 		return Arrays.asList(result);
 	}
 	
-	private void mergeXMLFiles(final List<File> files) throws IOException, MojoFailureException {
+	private void mergeXMLFiles(final List<File> files, final String output) throws IOException, MojoFailureException {
 		File outputFile = new File(output);
 		FileHelper fh = new FileHelperImpl();
 		outputFile.delete();
@@ -112,4 +109,5 @@ public class XMLDocumentMergerImpl implements DocumentMerger {
 			}
 		}
 	}
+
 }

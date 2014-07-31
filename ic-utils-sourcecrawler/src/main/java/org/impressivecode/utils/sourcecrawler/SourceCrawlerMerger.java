@@ -47,8 +47,8 @@ public class SourceCrawlerMerger extends AbstractMojo {
 	}
 	
 	private void mergeXMLFiles(final String directory, final String output) throws IOException, MojoFailureException{
-		DocumentMerger documentMerger = new XMLDocumentMergerImpl(directory, output);
-		documentMerger.createMergedFile();
+		DocumentMerger documentMerger = new XMLDocumentMergerImpl();
+		documentMerger.createMergedFile(directory, output);
 	}
 
 }
