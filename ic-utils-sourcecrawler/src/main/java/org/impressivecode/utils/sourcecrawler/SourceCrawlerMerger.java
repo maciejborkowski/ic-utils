@@ -27,14 +27,15 @@ import org.impressivecode.utils.sourcecrawler.document.DocumentMerger;
 import org.impressivecode.utils.sourcecrawler.document.XMLDocumentMergerImpl;
 
 /**
+ * @author Maciej Borkowski, Capgemini Poland
  * Goal which merges scanner output
  * @phase package
  */
-@Mojo(name = "merge")
+@Mojo(name = "merge", aggregator = true)
 public class SourceCrawlerMerger extends AbstractMojo {
 	@Parameter(defaultValue = "${basedir}")
     private String directory;
-	
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		String output = "sourcecrawler.xml";
@@ -45,7 +46,7 @@ public class SourceCrawlerMerger extends AbstractMojo {
 		}
 	}
 	
-	void mergeXMLFiles(String directory, String output) throws IOException, MojoFailureException{
+	private void mergeXMLFiles(final String directory, final String output) throws IOException, MojoFailureException{
 		DocumentMerger documentMerger = new XMLDocumentMergerImpl(directory, output);
 		documentMerger.createMergedFile();
 	}

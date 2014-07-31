@@ -9,6 +9,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.apache.maven.plugin.MojoFailureException;
@@ -35,23 +36,22 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  * @author Maciej Borkowski, Capgemini Poland
  */
 public class XMLDocumentMergerImpl implements DocumentMerger {
-
 	final String directory;
 	final String output;
 	
-	public XMLDocumentMergerImpl(final String directory, String output) {
+	public XMLDocumentMergerImpl(final String directory, final String output) {
 		this.directory = directory;
 		this.output = output;
 	}
 
 	@Override
 	public void createMergedFile() throws IOException, MojoFailureException {
-		List<File> files = findXMLResults();
+		List<File> files = findXMLFiles();
 		mergeXMLFiles(files);
 		removeFiles(files);
 	}
 
-	private List<File> findXMLResults() {
+	private List<File> findXMLFiles() {
 		File dir = new File(directory);
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -74,28 +74,28 @@ public class XMLDocumentMergerImpl implements DocumentMerger {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(output)); 
 		File aFile;
 		try {
-			aFile = files.get(0);
-		} catch(IndexOutOfBoundsException e) {
+			aFile = files.iterator().next();
+		} catch(NoSuchElementException e) {
 			Logger.getLogger("MergeExceptions").severe("NO FILES FOUND");
 			throw new MojoFailureException("No files found");
 		}
-		startFile(aFile, writer);
+		copyFileLines(aFile, writer, 0, 3);
 		for(File inputFile : files) {
-			appendFile(inputFile, writer, fh.countLines(inputFile));
+			copyFileLines(inputFile, writer, 3, fh.countLines(inputFile) - 1);
 		}
-		endFile(aFile, writer, fh.countLines(aFile));
+		copyFileLines(aFile, writer, fh.countLines(aFile) - 1, fh.countLines(aFile));
 		writer.close();
 	}
-		
-	private void appendFile(final File input, final BufferedWriter writer, final int inputLineCount) throws IOException {
+	
+	private void copyFileLines(final File input, final BufferedWriter writer, final int fromLine, final int toLine)
+			throws IOException {
 		try(BufferedReader reader = new BufferedReader(new FileReader(input))) {
-		    for(int i = 0; i < inputLineCount; i++) {
-		    	if(i > 2 && i < inputLineCount - 1 ){
-			        writer.write(reader.readLine());
-			        writer.newLine();
-		    	} else {
-		    		reader.readLine();
-		    	}
+			for(int i = 0; i < fromLine; i++) {
+				reader.readLine();
+			}
+		    for(int i = fromLine; i < toLine; i++) {
+		        writer.write(reader.readLine());
+		        writer.newLine();
 		    }
 		    reader.close();
 		} catch (IOException e) {
@@ -104,33 +104,7 @@ public class XMLDocumentMergerImpl implements DocumentMerger {
 		}
 	}
 	
-	private void startFile(final File input, final BufferedWriter writer) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(input));
-		for(int i = 0; i < 3; i++) {
-			writer.write(reader.readLine());
-			writer.newLine();
-		}
-		reader.close();
-	}
-	
-	private void endFile(final File input, final BufferedWriter writer, final int inputLineCount) throws IOException {
-		try(BufferedReader reader = new BufferedReader(new FileReader(input))) {
-		    for(int i = 0; i < inputLineCount; i++) {
-		    	if(inputLineCount - 1 == i ) {
-			        writer.write(reader.readLine());
-			        writer.newLine();
-		    	} else {
-		    		reader.readLine();
-		    	}
-		    }
-		    reader.close();
-		} catch (IOException e) {
-			Logger.getLogger("MergeExceptions").severe("COULD NOT MERGE " + input.getName());
-			throw new IOException("Could not parse file " + input.getName());
-		}
-	}
-	
-	private void removeFiles(List<File> files) {
+	private void removeFiles(final List<File> files) {
 		for(File file : files) {
 			try {
 				file.delete();

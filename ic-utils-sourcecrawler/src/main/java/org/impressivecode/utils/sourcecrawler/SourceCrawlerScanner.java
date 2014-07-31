@@ -64,25 +64,28 @@ public class SourceCrawlerScanner extends AbstractMojo {
     public void execute(String input, String output) throws MojoExecutionException {
         getLog().info("Start scan files.");
         try {
-            List<JavaFile> parsedFiles = prepareFileList(input);
-            writeXMLDocument(parsedFiles, output);
-        } catch(IOException e){
+            File src = new File(input + "/src");
+            if(src.isDirectory()){
+                List<JavaFile> parsedFiles = prepareFileList(src.getCanonicalPath());
+                writeXMLDocument(parsedFiles, output);
+            }
+        } catch(IOException e) {
     		getLog().error(e.getMessage());
     		throw new MojoExecutionException(e.getMessage());
         }
         getLog().info("Finish.");
     }
     
-    public List<JavaFile> executeCleanly(String input) throws FileNotFoundException, IOException{
+    public List<JavaFile> executeCleanly(final String input) throws FileNotFoundException, IOException{
 		return prepareFileList(input);
     }
     
-    public void writeXMLDocument(List<JavaFile> parsedFiles, String output) throws IOException {
+    public void writeXMLDocument(List<JavaFile> parsedFiles, final String output) throws IOException {
     		DocumentWriter writer = new XMLDocumentWriterImpl(output);
     		writer.write(parsedFiles);
     }
     
-    private List<JavaFile> prepareFileList(String filesToParse) throws IOException,
+    private List<JavaFile> prepareFileList(final String filesToParse) throws IOException,
             FileNotFoundException {
         List<Path> scanDirectoryFiles = generateFileList(filesToParse);
         List<JavaFile> parseFiles = generateFilesListToParse(scanDirectoryFiles);
@@ -97,9 +100,8 @@ public class SourceCrawlerScanner extends AbstractMojo {
         return fileParser.parseFiles(scanDirectoryFiles);
     }
 
-    private List<Path> generateFileList(String filesToParse) throws IOException {
-        Path path = Paths.get(filesToParse);
-
+    private List<Path> generateFileList(final String filesToParse) throws IOException {
+    	Path path = Paths.get(filesToParse);
         FileHelper fileHelper = new FileHelperImpl();
         PathMatcher matcher = fileHelper.getPathMatcher("glob:*.java");
         FileScanner fileScanner = new FileScannerImpl(fileHelper);
