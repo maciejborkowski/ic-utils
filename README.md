@@ -36,7 +36,7 @@ Now we can execute scan goal in this project by following command:
 mvn org.impressivecode.utils.sourcecrawler:ic-utils-sourcecrawler:1.0.0:scan
 ```
 
-Plugin generates output sourcecrawler-<name-of-directory>.xml for every module in parent directory of project.
+Plugin generates output sourcecrawler-[name-of-directory].xml for every module in parent directory of project.
 
 You can execute another goal to merge those file into one sourcecrawler.xml using following command:
 
