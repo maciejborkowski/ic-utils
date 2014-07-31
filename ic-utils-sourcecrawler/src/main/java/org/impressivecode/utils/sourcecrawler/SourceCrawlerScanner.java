@@ -1,4 +1,3 @@
-package org.impressivecode.utils.sourcecrawler;
 /*
  ImpressiveCode Depress Framework Source Crawler
  Copyright (C) 2013 ImpressiveCode contributors
@@ -16,6 +15,8 @@ package org.impressivecode.utils.sourcecrawler;
  You should have received a copy of the GNU General Public License
  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.impressivecode.utils.sourcecrawler;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;

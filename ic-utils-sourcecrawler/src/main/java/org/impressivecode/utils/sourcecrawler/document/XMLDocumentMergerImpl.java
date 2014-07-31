@@ -1,20 +1,3 @@
-package org.impressivecode.utils.sourcecrawler.document;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.logging.Logger;
-
-import org.apache.maven.plugin.MojoFailureException;
-import org.impressivecode.utils.sourcecrawler.files.FileHelper;
-import org.impressivecode.utils.sourcecrawler.files.FileHelperImpl;
 /*
 ImpressiveCode Depress Framework Source Crawler
 Copyright (C) 2013 ImpressiveCode contributors
@@ -32,37 +15,35 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+package org.impressivecode.utils.sourcecrawler.document;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.logging.Logger;
+
+import org.apache.maven.plugin.MojoFailureException;
+import org.impressivecode.utils.sourcecrawler.files.FileHelper;
+import org.impressivecode.utils.sourcecrawler.files.FileHelperImpl;
+
 /**
  * @author Maciej Borkowski, Capgemini Poland
  */
-public class XMLDocumentMergerImpl implements DocumentMerger {
-	
+public class XMLDocumentMergerImpl extends DocumentMerger {
 	public XMLDocumentMergerImpl() {
 	}
 
 	@Override
 	public void createMergedFile(final String directory, final String output)
 			throws IOException, MojoFailureException {
-		List<File> files = findXMLFiles(directory);
+		List<File> files = findFiles(directory, ".xml");
 		mergeXMLFiles(files, output);
 		removeFiles(files);
 	}
 
-	private List<File> findXMLFiles(final String directory) {
-		File dir = new File(directory);
-		FilenameFilter filter = new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				if (name.startsWith("sourcecrawler-") && name.endsWith(".xml")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		};
-		File[] result = dir.listFiles(filter);
-		return Arrays.asList(result);
-	}
-	
 	private void mergeXMLFiles(final List<File> files, final String output) throws IOException, MojoFailureException {
 		File outputFile = new File(output);
 		FileHelper fh = new FileHelperImpl();
@@ -83,31 +64,4 @@ public class XMLDocumentMergerImpl implements DocumentMerger {
 		writer.close();
 	}
 	
-	private void copyFileLines(final File input, final BufferedWriter writer, final int fromLine, final int toLine)
-			throws IOException {
-		try(BufferedReader reader = new BufferedReader(new FileReader(input))) {
-			for(int i = 0; i < fromLine; i++) {
-				reader.readLine();
-			}
-		    for(int i = fromLine; i < toLine; i++) {
-		        writer.write(reader.readLine());
-		        writer.newLine();
-		    }
-		    reader.close();
-		} catch (IOException e) {
-			Logger.getLogger("MergeExceptions").severe("COULD NOT MERGE " + input.getName());
-			throw new IOException("Could not parse file " + input.getName());
-		}
-	}
-	
-	private void removeFiles(final List<File> files) {
-		for(File file : files) {
-			try {
-				file.delete();
-			} catch(SecurityException e) {
-				Logger.getLogger("MergeExceptions").severe("CANNOT REMOVE FILE" + file.getName());
-			}
-		}
-	}
-
 }

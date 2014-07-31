@@ -1,4 +1,3 @@
-package org.impressivecode.utils.sourcecrawler;
 /*
 ImpressiveCode Depress Framework Source Crawler
 Copyright (C) 2013 ImpressiveCode contributors
@@ -16,6 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+package org.impressivecode.utils.sourcecrawler;
+
 import java.io.IOException;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -42,7 +43,7 @@ public class SourceCrawlerMerger extends AbstractMojo {
 		try {
 			mergeXMLFiles(directory, output);
 		} catch (IOException e) {
-			throw new MojoExecutionException("IOException");
+			throw new MojoExecutionException("IOException: " + e.getMessage());
 		}
 	}
 	

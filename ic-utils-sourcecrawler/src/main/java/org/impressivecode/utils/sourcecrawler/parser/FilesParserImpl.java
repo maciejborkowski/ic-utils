@@ -64,27 +64,22 @@ public class FilesParserImpl implements FilesParser {
 		return javaFiles;
 	}
 
-	private List<JavaSource> iterateByPaths(List<Path> javaPaths)
-			throws IOException {
+	private List<JavaSource> iterateByPaths(List<Path> javaPaths) throws IOException {
 		Logger logger = Logger.getLogger("ParseErrors");
-		FileHandler fh;
-        fh = new FileHandler("ParseErrors.log", true);  
+		FileHandler fh = new FileHandler("ParseErrors.log", true);  
         logger.addHandler(fh);
-        SimpleFormatter formatter = new SimpleFormatter();  
-        fh.setFormatter(formatter); 
-
+        fh.setFormatter(new SimpleFormatter()); 
 		for (Path path : javaPaths) {
 			File fileToParse = path.toFile();
-			try{
+			try {
 				javaProjectBuilder.addSource(fileToParse);
-			} catch (RuntimeException e){
+			} catch (RuntimeException e) {
 				synchronized(this) {
 					logger.severe("Could not parse file. Reason: " + e.getMessage() + ". File omitted.");
 				}
 			}
 		}
 		fh.close();
-		List<JavaSource> javaFiles = newArrayList(javaProjectBuilder.getSources());
-		return javaFiles;
+		return newArrayList(javaProjectBuilder.getSources());
 	}
 }
