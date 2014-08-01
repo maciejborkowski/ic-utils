@@ -32,6 +32,7 @@ import java.nio.file.PathMatcher;
 /**
  * 
  * @author Paweł Nosal
+ * @author Maciej Borkowski, Capgemini Poland
  * 
  */
 

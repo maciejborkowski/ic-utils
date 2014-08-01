@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+  <file>
+    <path>C:\workspace\pitest-master\pitest-command-line\src\main\java\org\pitest\mutationtest\commandline\OptionsParser.java</path>
+    <package>org.pitest.mutationtest.commandline</package>
+    <classes>
+      <class>
+        <name>OptionsParser</name>
+        <access>Package-private</access>
+        <type>Class</type>
+        <exception>false</exception>
+        <inner>false</inner>
+        <test>false</test>
+        <final>false</final>
+      </class>
+    </classes>
+  </file>
+  <file>
+    <path>C:\workspace\pitest-master\pitest-command-line\src\main\java\org\pitest\mutationtest\commandline\ParseResult.java</path>
+    <package>org.pitest.mutationtest.commandline</package>
+    <classes>
+      <class>
+        <name>ParseResult</name>
+        <access>Package-private</access>
+        <type>Class</type>
+        <exception>false</exception>
+        <inner>false</inner>
+        <test>false</test>
+        <final>false</final>
+      </class>
+    </classes>
+  </file>
+ <file>
+    <path>C:\workspace\pitest-master\pitest-command-line\src\main\java\org\pitest\mutationtest\commandline\MutationCoverageReport.java</path>
+    <package>org.pitest.mutationtest.commandline</package>
+    <classes>
+      <class>
+        <name>MutationCoverageReport</name>
+        <access>Package-private</access>
+        <type>Class</type>
+        <exception>false</exception>
+        <inner>false</inner>
+        <test>false</test>
+        <final>false</final>
+      </class>
+    </classes>
+  </file>
+</root>

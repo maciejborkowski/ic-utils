@@ -44,7 +44,7 @@ public class XMLDocumentMergerImpl extends DocumentMerger {
 		removeFiles(files);
 	}
 
-	private void mergeXMLFiles(final List<File> files, final String output) throws IOException, MojoFailureException {
+	public void mergeXMLFiles(final List<File> files, final String output) throws IOException, MojoFailureException {
 		File outputFile = new File(output);
 		FileHelper fh = new FileHelperImpl();
 		outputFile.delete();
